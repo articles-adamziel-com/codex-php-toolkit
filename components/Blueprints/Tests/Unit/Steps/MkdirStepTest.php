@@ -43,7 +43,7 @@ class MkdirStepTest extends StepTestCase {
 		$path = 'dir/subdir';
 		$step = new MkdirStep(
 			$path,
-			[ 'recursive' => true ]
+			array( 'recursive' => true )
 		);
 
 		$tracker = new Tracker();
@@ -77,7 +77,7 @@ class MkdirStepTest extends StepTestCase {
 
 		$tracker = new Tracker();
 		$this->expectException( BlueprintExecutionException::class );
-		$this->expectExceptionMessageMatches( "/Path already exists:/" );
+		$this->expectExceptionMessageMatches( '/Path already exists:/' );
 		$step->run( $this->runtime, $tracker );
 	}
 }

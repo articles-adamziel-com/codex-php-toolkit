@@ -16,16 +16,19 @@ class RunPHPStepTest extends StepTestCase {
 	 */
 	public function testRunSimplePHPCode() {
 		$output_file = wp_join_unix_paths( $this->runtime->getConfiguration()->getTargetSiteRoot(), 'output.txt' );
-		
-		$step = new RunPHPStep(new InlineFile(
-			[
-				'filename' => 'script.php',
-				'content' => <<<PHP
+
+		$step = new RunPHPStep(
+			new InlineFile(
+				array(
+					'filename' => 'script.php',
+					'content' => <<<PHP
 <?php 
 file_put_contents(getenv('DOCROOT') . '/output.txt', 'Hello World');
 PHP
-			]
-		));
+				,
+				)
+			)
+		);
 
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );
@@ -39,12 +42,12 @@ PHP
 	 */
 	public function testRunPHPCodeCreatingFile() {
 		$test_file_path = wp_join_unix_paths( $this->runtime->getConfiguration()->getTargetSiteRoot(), 'test_file.txt' );
-		$output_file = wp_join_unix_paths( $this->runtime->getConfiguration()->getTargetSiteRoot(), 'output.txt' );
-		$test_content = 'This is a test file created by PHP';
+		$output_file    = wp_join_unix_paths( $this->runtime->getConfiguration()->getTargetSiteRoot(), 'output.txt' );
+		$test_content   = 'This is a test file created by PHP';
 
 		$step = new RunPHPStep(
 			new InlineFile(
-				[
+				array(
 					'filename' => 'script.php',
 					'content' => <<<PHP
 <?php
@@ -53,7 +56,8 @@ PHP
 file_put_contents(\$test_file_path, 'This is a test file created by PHP');
 file_put_contents(\$docroot . '/output.txt', 'File created');
 PHP
-				]
+				,
+				)
 			)
 		);
 
@@ -71,10 +75,10 @@ PHP
 	 */
 	public function testRunPHPCodeWithWordPress() {
 		$output_file = wp_join_unix_paths( $this->runtime->getConfiguration()->getTargetSiteRoot(), 'output.txt' );
-		
+
 		$step = new RunPHPStep(
 			new InlineFile(
-				[
+				array(
 					'filename' => 'script.php',
 					'content' => <<<PHP
 <?php
@@ -86,7 +90,8 @@ update_option('test_option', 'test_value');
 // Write the option value to an output file
 file_put_contents(getenv('DOCROOT') . '/output.txt', get_option('test_option'));
 PHP
-				]
+				,
+				)
 			)
 		);
 
@@ -103,7 +108,6 @@ PHP
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( get_option('test_option') );
 PHP
-
 		)->outputFileContent;
 
 		$this->assertEquals( 'test_value', $option_value );
@@ -114,10 +118,10 @@ PHP
 	 */
 	public function testRunPHPCodeReturningComplexData() {
 		$output_file = wp_join_unix_paths( $this->runtime->getConfiguration()->getTargetSiteRoot(), 'output.txt' );
-		
+
 		$step = new RunPHPStep(
 			new InlineFile(
-				[
+				array(
 					'filename' => 'script.php',
 					'content' => <<<PHP
 <?php
@@ -131,7 +135,8 @@ PHP
 
 file_put_contents(getenv('DOCROOT') . '/output.txt', json_encode(\$data));
 PHP
-				]
+				,
+				)
 			)
 		);
 
@@ -145,8 +150,8 @@ PHP
 		$this->assertEquals( 'Hello', $data['string'] );
 		$this->assertEquals( 42, $data['number'] );
 		$this->assertTrue( $data['boolean'] );
-		$this->assertEquals( [ 1, 2, 3 ], $data['array'] );
-		$this->assertEquals( [ 'name' => 'Test' ], $data['object'] );
+		$this->assertEquals( array( 1, 2, 3 ), $data['array'] );
+		$this->assertEquals( array( 'name' => 'Test' ), $data['object'] );
 	}
 
 	/**
@@ -155,12 +160,13 @@ PHP
 	public function testRunPHPCodeWithSyntaxError() {
 		$step = new RunPHPStep(
 			new InlineFile(
-				[
+				array(
 					'filename' => 'script.php',
 					'content' => <<<PHP
 <?php echo "Missing semicolon" echo "Another string";
 PHP
-				]
+				,
+				)
 			)
 		);
 

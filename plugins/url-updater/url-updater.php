@@ -149,10 +149,10 @@ function rpi_install_plugin_from_url( string $package_url, bool $is_update = fal
 		return new WP_Error( 'download_failed', $tmp_file->get_error_message() );
 	}
 
-	$parsed_url     = wp_parse_url( $package_url );
-	$package_path   = isset( $parsed_url['path'] ) ? $parsed_url['path'] : '';
+	$parsed_url        = wp_parse_url( $package_url );
+	$package_path      = isset( $parsed_url['path'] ) ? $parsed_url['path'] : '';
 	$package_extension = 'zip';
-	$base_name      = $original_plugin_file ? basename( dirname( $original_plugin_file ) ) : basename( $package_path, '.' . $package_extension );
+	$base_name         = $original_plugin_file ? basename( dirname( $original_plugin_file ) ) : basename( $package_path, '.' . $package_extension );
 
 	/**
 	 * $tmp_file has a random component in the filename. WordPress would

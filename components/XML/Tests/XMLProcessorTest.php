@@ -15,9 +15,9 @@ use WordPress\XML\XMLProcessor;
  * @coversDefaultClass XMLProcessor
  */
 class XMLProcessorTest extends TestCase {
-	const XML_SIMPLE = '<wp:content xmlns:wp="w.org" id="first"><wp:text id="second">Text</wp:text></wp:content>';
+	const XML_SIMPLE       = '<wp:content xmlns:wp="w.org" id="first"><wp:text id="second">Text</wp:text></wp:content>';
 	const XML_WITH_CLASSES = '<wp:content xmlns:wp="w.org" wp:post-type="main with-border" id="first"><wp:text wp:post-type="not-main bold with-border" id="second">Text</wp:text></wp:content>';
-	const XML_MALFORMED = '<wp:content xmlns:wp="w.org"><wp:text wp:post-type="d-md-none" Notifications</wp:text><wp:text wp:post-type="d-none d-md-inline">Back to notifications</wp:text></wp:content>';
+	const XML_MALFORMED    = '<wp:content xmlns:wp="w.org"><wp:text wp:post-type="d-md-none" Notifications</wp:text><wp:text wp:post-type="d-none d-md-inline">Back to notifications</wp:text></wp:content>';
 
 	public function beforeEach() {
 		$GLOBALS['_doing_it_wrong_messages'] = array();
@@ -40,7 +40,7 @@ class XMLProcessorTest extends TestCase {
 	public function test_get_tag_returns_null_when_not_in_open_tag() {
 		$processor = XMLProcessor::create_from_string( '<wp:content xmlns:wp="w.org">Test</wp:content>' );
 
-		$this->assertFalse( $processor->next_tag( array( '', 'p') ), 'Querying a non-existing tag did not return false' );
+		$this->assertFalse( $processor->next_tag( array( '', 'p' ) ), 'Querying a non-existing tag did not return false' );
 		$this->assertNull( $processor->get_tag_local_name(), 'Accessing a non-existing tag did not return null' );
 	}
 
@@ -61,8 +61,8 @@ class XMLProcessorTest extends TestCase {
 	 *
 	 * @dataProvider data_is_empty_element
 	 *
-	 * @param  string  $xml  Input XML whose first tag might contain the self-closing flag `/`.
-	 * @param  bool  $flag_is_set  Whether the input XML's first tag contains the self-closing flag.
+	 * @param  string $xml  Input XML whose first tag might contain the self-closing flag `/`.
+	 * @param  bool   $flag_is_set  Whether the input XML's first tag contains the self-closing flag.
 	 */
 	public function test_is_empty_element_matches_input_xml( $xml, $flag_is_set ) {
 		$processor = XMLProcessor::create_from_string( $xml );
@@ -108,8 +108,10 @@ class XMLProcessorTest extends TestCase {
 		$processor = XMLProcessor::create_from_string( '<wp:content xmlns:wp="w.org" wp:post-type="test">Test</wp:content>' );
 
 		$this->assertFalse( $processor->next_tag( 'p' ), 'Querying a non-existing tag did not return false' );
-		$this->assertNull( $processor->get_attribute( '', 'wp:post-type' ),
-			'Accessing an attribute of a non-existing tag did not return null' );
+		$this->assertNull(
+			$processor->get_attribute( '', 'wp:post-type' ),
+			'Accessing an attribute of a non-existing tag did not return null'
+		);
 	}
 
 	/**
@@ -157,8 +159,11 @@ class XMLProcessorTest extends TestCase {
 		$processor = XMLProcessor::create_from_string( '<wp:content wp:post-type="test" xmlns:wp="w.org">Test</wp:content>' );
 
 		$this->assertTrue( $processor->next_tag( array( 'breadcrumbs' => array( array( 'w.org', 'content' ) ) ) ), 'Querying an existing tag did not return true' );
-		$this->assertSame( 'test', $processor->get_attribute( 'w.org', 'post-type' ),
-			'Accessing a wp:post-type="test" attribute value did not return "test"' );
+		$this->assertSame(
+			'test',
+			$processor->get_attribute( 'w.org', 'post-type' ),
+			'Accessing a wp:post-type="test" attribute value did not return "test"'
+		);
 	}
 
 	/**
@@ -276,7 +281,7 @@ class XMLProcessorTest extends TestCase {
 	 *
 	 * @covers XMLProcessor::get_attribute
 	 *
-	 * @param  string  $attribute_name  Name of data-enabled attribute with case variations.
+	 * @param  string $attribute_name  Name of data-enabled attribute with case variations.
 	 */
 	public function test_get_attribute_is_case_sensitive() {
 		$processor = XMLProcessor::create_from_string( '<wp:content xmlns:wp="w.org" DATA-enabled="true">Test</wp:content>' );
@@ -304,13 +309,19 @@ class XMLProcessorTest extends TestCase {
 		$processor->next_tag();
 		$processor->remove_attribute( '', 'data-enabled' );
 
-		$this->assertSame( '<wp:content DATA-enabled="true">Test</wp:content>', $processor->get_updated_xml(),
-			'A case-sensitive remove_attribute call did remove the attribute' );
+		$this->assertSame(
+			'<wp:content DATA-enabled="true">Test</wp:content>',
+			$processor->get_updated_xml(),
+			'A case-sensitive remove_attribute call did remove the attribute'
+		);
 
 		$processor->remove_attribute( '', 'DATA-enabled' );
 
-		$this->assertSame( '<wp:content DATA-enabled="true">Test</wp:content>', $processor->get_updated_xml(),
-			'A case-sensitive remove_attribute call did not remove the attribute' );
+		$this->assertSame(
+			'<wp:content DATA-enabled="true">Test</wp:content>',
+			$processor->get_updated_xml(),
+			'A case-sensitive remove_attribute call did not remove the attribute'
+		);
 	}
 
 	/**
@@ -322,8 +333,11 @@ class XMLProcessorTest extends TestCase {
 		$processor->next_tag();
 		$processor->set_attribute( '', 'data-enabled', 'abc' );
 
-		$this->assertSame( '<wp:content data-enabled="abc" xmlns:wp="w.org" DATA-enabled="true">Test</wp:content>', $processor->get_updated_xml(),
-			'A case-insensitive set_attribute call did not update the existing attribute' );
+		$this->assertSame(
+			'<wp:content data-enabled="abc" xmlns:wp="w.org" DATA-enabled="true">Test</wp:content>',
+			$processor->get_updated_xml(),
+			'A case-insensitive set_attribute call did not update the existing attribute'
+		);
 	}
 
 	/**
@@ -346,8 +360,10 @@ class XMLProcessorTest extends TestCase {
 		$processor = XMLProcessor::create_from_string( '<wp:content xmlns:wp="w.org" data-foo="bar">Test</wp:content>' );
 		$processor->next_tag( 'w.org', 'content' );
 		$processor->next_token();
-		$this->assertNull( $processor->get_attribute_names_with_prefix( '', 'data-' ),
-			'Accessing attributes of a non-existing tag did not return null' );
+		$this->assertNull(
+			$processor->get_attribute_names_with_prefix( '', 'data-' ),
+			'Accessing attributes of a non-existing tag did not return null'
+		);
 	}
 
 	/**
@@ -359,8 +375,10 @@ class XMLProcessorTest extends TestCase {
 		$processor->next_tag( 'w.org', 'content' );
 		$processor->next_tag( array( 'tag_closers' => 'visit' ) );
 
-		$this->assertNull( $processor->get_attribute_names_with_prefix( '', 'data-' ),
-			'Accessing attributes of a closing tag did not return null' );
+		$this->assertNull(
+			$processor->get_attribute_names_with_prefix( '', 'data-' ),
+			'Accessing attributes of a closing tag did not return null'
+		);
 	}
 
 	/**
@@ -371,8 +389,11 @@ class XMLProcessorTest extends TestCase {
 		$processor = XMLProcessor::create_from_string( '<wp:content>Test</wp:content>' );
 		$processor->next_tag( 'wp:content' );
 
-		$this->assertSame( array(), $processor->get_attribute_names_with_prefix( '', 'data-' ),
-			'Accessing the attributes on a tag without any did not return an empty array' );
+		$this->assertSame(
+			array(),
+			$processor->get_attribute_names_with_prefix( '', 'data-' ),
+			'Accessing the attributes on a tag without any did not return an empty array'
+		);
 	}
 
 	/**
@@ -413,7 +434,7 @@ class XMLProcessorTest extends TestCase {
 
 	public function test_get_attribute_names_with_prefix_with_namespace_and_local_name_prefix() {
 		// XML with two attributes in the wp namespace and one in no namespace
-		$xml = '<content xmlns:wp="http://wordpress.org/export/1.2/" wp:data-foo="bar" wp:data-bar="baz" data-foo="no-ns" />';
+		$xml       = '<content xmlns:wp="http://wordpress.org/export/1.2/" wp:data-foo="bar" wp:data-bar="baz" data-foo="no-ns" />';
 		$processor = XMLProcessor::create_from_string( $xml );
 		$this->assertTrue( $processor->next_tag(), 'Querying a tag did not return true' );
 
@@ -575,17 +596,16 @@ class XMLProcessorTest extends TestCase {
 	/**
 	 * Ensures that bookmarks start and length correctly describe a given token in XML.
 	 *
-	 *
 	 * @dataProvider data_xml_nth_token_substring
 	 *
-	 * @param  string  $xml  Input XML.
-	 * @param  int  $match_nth_token  Which token to inspect from input XML.
-	 * @param  string  $expected_match  Expected full raw token bookmark should capture.
+	 * @param  string $xml  Input XML.
+	 * @param  int    $match_nth_token  Which token to inspect from input XML.
+	 * @param  string $expected_match  Expected full raw token bookmark should capture.
 	 */
 	public function test_token_bookmark_span( string $xml, int $match_nth_token, string $expected_match ) {
 		$processor = new class( $xml ) extends XMLProcessor {
 			public function __construct( $xml ) {
-				parent::__construct( $xml, [], self::CONSTRUCTOR_UNLOCK_CODE );
+				parent::__construct( $xml, array(), self::CONSTRUCTOR_UNLOCK_CODE );
 			}
 
 			/**
@@ -611,7 +631,7 @@ class XMLProcessorTest extends TestCase {
 			}
 		};
 
-		for ( $i = 0; $i < $match_nth_token; $i ++ ) {
+		for ( $i = 0; $i < $match_nth_token; $i++ ) {
 			$processor->next_token();
 		}
 
@@ -734,7 +754,7 @@ class XMLProcessorTest extends TestCase {
 	 */
 	public function test_next_tag_ns_two_arguments( $xml, $namespace, $local_name ) {
 		$processor1 = XMLProcessor::create_from_string( $xml );
-		$result1 = $processor1->next_tag( $namespace, $local_name );
+		$result1    = $processor1->next_tag( $namespace, $local_name );
 		$this->assertTrue( $result1, 'next_tag($ns, $tag_name) did not find the tag' );
 		$this->assertSame( $local_name, $processor1->get_tag_local_name(), 'next_tag($ns, $tag_name) did not land on correct tag' );
 		$this->assertSame( $namespace, $processor1->get_tag_namespace(), 'next_tag($ns, $tag_name) did not land on correct namespace' );
@@ -747,11 +767,10 @@ class XMLProcessorTest extends TestCase {
 	public function test_next_tag_array_query( $xml, $namespace, $local_name ) {
 		// Test using next_tag([$ns, $tag_name])
 		$processor2 = XMLProcessor::create_from_string( $xml );
-		$result2 = $processor2->next_tag( array( $namespace, $local_name ) );
+		$result2    = $processor2->next_tag( array( $namespace, $local_name ) );
 		$this->assertTrue( $result2, 'next_tag([$ns, $tag_name]) did not find the tag' );
 		$this->assertSame( $local_name, $processor2->get_tag_local_name(), 'next_tag([$ns, $tag_name]) did not land on correct tag' );
 		$this->assertSame( $namespace, $processor2->get_tag_namespace(), 'next_tag([$ns, $tag_name]) did not land on correct namespace' );
-
 	}
 
 	/**
@@ -797,14 +816,15 @@ class XMLProcessorTest extends TestCase {
 		$processor = XMLProcessor::create_from_string( '<wp:content xmlns:wp="w.org"><photo /></wp:content>' );
 
 		$this->assertTrue( $processor->next_tag( array( 'breadcrumbs' => array( array( 'w.org', 'content' ) ) ) ), 'Did not find desired tag opener' );
-		$this->assertFalse( $processor->next_tag( array( 'breadcrumbs' => array( array( 'w.org', 'content' ) ) ) ),
-			'Visited an unwanted tag, a tag closer' );
+		$this->assertFalse(
+			$processor->next_tag( array( 'breadcrumbs' => array( array( 'w.org', 'content' ) ) ) ),
+			'Visited an unwanted tag, a tag closer'
+		);
 	}
 
 	/**
 	 * Verifies that updates to a document before calls to `get_updated_xml()` don't
 	 * lead to the Tag Processor jumping to the wrong tag after the updates.
-	 *
 	 *
 	 * @covers XMLProcessor::get_updated_xml
 	 */
@@ -822,8 +842,10 @@ class XMLProcessorTest extends TestCase {
 		// Move ahead.
 		$tags->next_tag( 'photo' );
 		$tags->seek( 'here' );
-		$this->assertSame( '<root xmlns:wp="w.org"><wp:content wp:post-type="foo">outside</wp:content><section><wp:content><photo>inside</wp:content></section></root>',
-			$tags->get_updated_xml() );
+		$this->assertSame(
+			'<root xmlns:wp="w.org"><wp:content wp:post-type="foo">outside</wp:content><section><wp:content><photo>inside</wp:content></section></root>',
+			$tags->get_updated_xml()
+		);
 		$this->assertSame( 'section', $tags->get_tag_local_name() );
 		$this->assertFalse( $tags->is_tag_closer() );
 	}
@@ -861,10 +883,14 @@ class XMLProcessorTest extends TestCase {
 
 		$processor->next_token();
 		$this->assertTrue( $processor->is_tag_closer(), 'Skipped tag closer' );
-		$this->assertFalse( $processor->set_attribute( '', 'id', 'test' ),
-			"Allowed setting an attribute on a tag closer when it shouldn't have" );
-		$this->assertFalse( $processor->remove_attribute( '', 'invalid-id' ),
-			"Allowed removing an attribute on a tag closer when it shouldn't have" );
+		$this->assertFalse(
+			$processor->set_attribute( '', 'id', 'test' ),
+			"Allowed setting an attribute on a tag closer when it shouldn't have"
+		);
+		$this->assertFalse(
+			$processor->remove_attribute( '', 'invalid-id' ),
+			"Allowed removing an attribute on a tag closer when it shouldn't have"
+		);
 		$this->assertSame(
 			'<wp:content xmlns:wp="w.org" id="3"></wp:content>',
 			$processor->get_updated_xml(),
@@ -1018,7 +1044,6 @@ class XMLProcessorTest extends TestCase {
 	 * Ensures that when setting an attribute multiple times that only
 	 * one update flushes out into the updated XML.
 	 *
-	 *
 	 * @covers XMLProcessor::set_attribute
 	 */
 	public function test_set_attribute_with_case_variants_updates_only_the_original_first_copy() {
@@ -1147,13 +1172,12 @@ class XMLProcessorTest extends TestCase {
 	/**
 	 * Ensures that unclosed and invalid comments trigger warnings or errors.
 	 *
-	 *
 	 * @covers       XMLProcessor::next_tag
 	 * @covers       XMLProcessor::paused_at_incomplete_token
 	 *
 	 * @dataProvider data_xml_with_unclosed_comments
 	 *
-	 * @param  string  $xml_ending_before_comment_close  XML with opened comments that aren't closed.
+	 * @param  string $xml_ending_before_comment_close  XML with opened comments that aren't closed.
 	 */
 	public function test_documents_may_end_with_unclosed_comment( $xml_ending_before_comment_close ) {
 		$processor = XMLProcessor::create_for_streaming( $xml_ending_before_comment_close );
@@ -1184,13 +1208,12 @@ class XMLProcessorTest extends TestCase {
 	/**
 	 * Ensures that partial syntax triggers warnings or errors.
 	 *
-	 *
 	 * @covers       XMLProcessor::next_tag
 	 * @covers       XMLProcessor::paused_at_incomplete_token
 	 *
 	 * @dataProvider data_partial_syntax
 	 *
-	 * @param  string  $xml_ending_before_comment_close  XML with partial syntax.
+	 * @param  string $xml_ending_before_comment_close  XML with partial syntax.
 	 */
 	public function test_partial_syntax_triggers_parse_error_when_streaming_is_not_used( $xml_ending_before_comment_close ) {
 		$processor = XMLProcessor::create_from_string( $xml_ending_before_comment_close );
@@ -1227,13 +1250,12 @@ class XMLProcessorTest extends TestCase {
 	/**
 	 * Ensures that the processor doesn't attempt to match an incomplete token.
 	 *
-	 *
 	 * @covers       XMLProcessor::next_tag
 	 * @covers       XMLProcessor::paused_at_incomplete_token
 	 *
 	 * @dataProvider data_incomplete_syntax_elements
 	 *
-	 * @param  string  $incomplete_xml  XML text containing some kind of incomplete syntax.
+	 * @param  string $incomplete_xml  XML text containing some kind of incomplete syntax.
 	 */
 	public function test_next_tag_returns_false_for_incomplete_syntax_elements( $incomplete_xml ) {
 		$processor = XMLProcessor::create_for_streaming( $incomplete_xml );
@@ -1276,18 +1298,17 @@ class XMLProcessorTest extends TestCase {
 	/**
 	 * Ensures that the processor doesn't attempt to match an incomplete text node.
 	 *
-	 *
 	 * @covers       XMLProcessor::next_tag
 	 * @covers       XMLProcessor::paused_at_incomplete_token
 	 *
 	 * @dataProvider data_incomplete_text_nodes
 	 *
-	 * @param  string  $incomplete_xml  XML text containing some kind of incomplete syntax.
+	 * @param  string $incomplete_xml  XML text containing some kind of incomplete syntax.
 	 */
 	public function test_next_tag_returns_false_for_incomplete_text_nodes( $incomplete_xml, $node_at = 1 ) {
 		$processor = XMLProcessor::create_for_streaming( $incomplete_xml );
 
-		for ( $i = 0; $i < $node_at; $i ++ ) {
+		for ( $i = 0; $i < $node_at; $i++ ) {
 			$this->assertTrue(
 				$processor->next_token(),
 				"Failed to find text node {$i} in incomplete XML."
@@ -1361,20 +1382,21 @@ class XMLProcessorTest extends TestCase {
 
 	/**
 	 * Ensures that non-tag syntax starting with `<` is rejected.
-	 *
 	 */
 	public function test_single_text_node_with_taglike_text() {
 		$processor = XMLProcessor::create_from_string( '<root xmlns:wp="w.org">This is a text node< /A>' );
 		$this->assertTrue( $processor->next_token(), 'A root node was not found.' );
 		$this->assertTrue( $processor->next_token(), 'A valid text node was not found.' );
-		$this->assertEquals( 'This is a text node', $processor->get_modifiable_text(),
-			'The contents of a valid text node were not correctly captured.' );
+		$this->assertEquals(
+			'This is a text node',
+			$processor->get_modifiable_text(),
+			'The contents of a valid text node were not correctly captured.'
+		);
 		$this->assertFalse( $processor->next_tag(), 'A malformed XML markup was not rejected.' );
 	}
 
 	/**
 	 * Ensures that non-tag syntax starting with `<` is rejected.
-	 *
 	 */
 	public function test_parses_CDATA() {
 		$processor = XMLProcessor::create_from_string( '<root xmlns:wp="w.org"><![CDATA[This is a CDATA text node.]]></root>' );
@@ -1462,27 +1484,29 @@ class XMLProcessorTest extends TestCase {
 			$processor->get_token_type(),
 			'The processing instruction was not correctly identified.'
 		);
-		$this->assertEquals( ' stylesheet type="text/xsl" href="style.xsl" ', $processor->get_modifiable_text(),
-			'The modifiable text was not correctly captured.' );
+		$this->assertEquals(
+			' stylesheet type="text/xsl" href="style.xsl" ',
+			$processor->get_modifiable_text(),
+			'The modifiable text was not correctly captured.'
+		);
 	}
 
 	/**
 	 * Ensures that updates which are enqueued in front of the cursor
 	 * are applied before moving forward in the document.
-	 *
 	 */
 	public function test_applies_updates_before_proceeding() {
 		$xml = '<root xmlns:wp="w.org"><wp:content><photo/></wp:content><wp:content><photo/></wp:content></root>';
 
 		$subclass = new class( $xml ) extends XMLProcessor {
 			public function __construct( $xml ) {
-				parent::__construct( $xml, [], self::CONSTRUCTOR_UNLOCK_CODE );
+				parent::__construct( $xml, array(), self::CONSTRUCTOR_UNLOCK_CODE );
 			}
 
 			/**
 			 * Inserts raw text after the current token.
 			 *
-			 * @param  string  $new_xml  Raw text to insert.
+			 * @param  string $new_xml  Raw text to insert.
 			 */
 			public function insert_after( $new_xml ) {
 				$this->set_bookmark( 'here' );
@@ -1577,15 +1601,15 @@ class XMLProcessorTest extends TestCase {
 	public function test_matches_breadcrumbs_wildcard_namespace() {
 		// Initialize the XMLProcessor with the given XML string
 		$processor = XMLProcessor::create_from_string(
-<<<XML
+			<<<XML
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss xmlns:wp="http://wordpress.org/export/1.2/">
     <channel>
         <wp:base_site_url>http://wordpress.com/</wp:base_site_url>
 	</channel>	
 </rss>	
-XML
-);
+    XML
+		);
 
 		$this->assertTrue( $processor->next_tag() ); // rss
 		$this->assertTrue( $processor->next_tag() ); // channel
@@ -1854,8 +1878,11 @@ XML;
 		$this->assertEquals( '#doctype', $processor->get_token_type(), 'Did not find DOCTYPE node' );
 		$this->assertEquals( 'html', $processor->get_doctype_name(), 'Did not find DOCTYPEName' );
 		$this->assertEquals( '-//W3C//DTD XHTML 1.1//EN', $processor->get_pubid_literal(), 'Did not find pubid literal' );
-		$this->assertEquals( 'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd', $processor->get_system_literal(),
-			'Did not find system literal' );
+		$this->assertEquals(
+			'http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd',
+			$processor->get_system_literal(),
+			'Did not find system literal'
+		);
 		$this->assertTrue( $processor->next_token(), 'Did not find root tag' );
 		$this->assertEquals( 'root', $processor->get_tag_local_name(), 'Did not find root tag' );
 	}
@@ -1873,8 +1900,11 @@ XML;
 		$this->assertEquals( '#doctype', $processor->get_token_type(), 'Did not find DOCTYPE node' );
 		$this->assertEquals( 'html', $processor->get_doctype_name(), 'Did not find DOCTYPEName' );
 		$this->assertNull( $processor->get_pubid_literal(), 'Should not have pubid literal for SYSTEM DOCTYPE' );
-		$this->assertEquals( 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd', $processor->get_system_literal(),
-			'Did not find system literal' );
+		$this->assertEquals(
+			'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd',
+			$processor->get_system_literal(),
+			'Did not find system literal'
+		);
 		$this->assertTrue( $processor->next_token(), 'Did not find root tag' );
 		$this->assertEquals( 'root', $processor->get_tag_local_name(), 'Did not find root tag' );
 	}
@@ -1921,7 +1951,7 @@ XML;
 		// Child element
 		$this->assertTrue( $processor->next_tag( array( 'http://example.com/ns1', 'child' ) ) );
 		$this->assertEquals( 'http://example.com/ns1', $processor->get_tag_namespace() );
-		$this->assertEquals( 'val2', $processor->get_attribute( '', 'attr' ), 'Unprefixed attribute attr was not found in the default namespace.' ); 
+		$this->assertEquals( 'val2', $processor->get_attribute( '', 'attr' ), 'Unprefixed attribute attr was not found in the default namespace.' );
 
 		// Grandchild element
 		$this->assertTrue( $processor->next_tag( array( 'http://example.com/ns1', 'grandchild' ) ) );
@@ -1945,7 +1975,7 @@ XML;
 		// Child element
 		$this->assertTrue( $processor->next_tag( array( 'http://example.com/ns2', 'child' ) ) );
 		$this->assertEquals( 'http://example.com/ns2', $processor->get_tag_namespace() );
-		$this->assertEquals( 'val2', $processor->get_attribute( '', 'attr' ), 'Unprefixed attribute attr was not found in the default namespace.' ); 
+		$this->assertEquals( 'val2', $processor->get_attribute( '', 'attr' ), 'Unprefixed attribute attr was not found in the default namespace.' );
 
 		// Grandchild element
 		$this->assertTrue( $processor->next_tag( array( 'http://example.com/ns2', 'grandchild' ) ) );
@@ -1959,7 +1989,7 @@ XML;
 	 */
 	public function test_overriding_the_default_namespace_applies_to_element_and_children() {
 		$processor = XMLProcessor::create_from_string( '<root xmlns="http://example.com/ns1"><child xmlns="http://example.com/ns2" attr="val"><grandchild /></child></root>' );
-		$this->assertTrue( $processor->next_tag(['*', 'child']) );
+		$this->assertTrue( $processor->next_tag( array( '*', 'child' ) ) );
 		$this->assertEquals( 'child', $processor->get_tag_local_name() );
 		$this->assertEquals( 'http://example.com/ns2', $processor->get_tag_namespace() );
 		$this->assertEquals( 'val', $processor->get_attribute( '', 'attr' ), 'Unprefixed attribute attr was not found in the default namespace.' ); // Unprefixed attributes are in no namespace.
@@ -2188,7 +2218,7 @@ XML;
 XML;
 
 		$processor = XMLProcessor::create_for_streaming( $xml );
-		
+
 		// Navigate to the first pause point: admin:highlight in the first post
 		$this->assertTrue( $processor->next_tag() ); // root
 		$this->assertTrue( $processor->next_tag() ); // wp:site-info
@@ -2215,31 +2245,31 @@ XML;
 		$this->assertTrue( $processor->next_tag() ); // first blog:paragraph
 		$this->assertTrue( $processor->next_tag() ); // second blog:paragraph
 		$this->assertTrue( $processor->next_tag() ); // admin:highlight
-		
+
 		$this->assertEquals( 'highlight', $processor->get_tag_local_name() );
 		$this->assertEquals( 'http://admin.example.com', $processor->get_tag_namespace() );
 		$this->assertEquals( 'yellow', $processor->get_attribute( '', 'color' ) );
-		
+
 		// TEST 1: Pause and resume 5 times at the same spot (admin:highlight)
 		for ( $i = 1; $i <= 5; $i++ ) {
 			$entity_offset = $processor->get_token_byte_offset_in_the_input_stream();
-			$cursor = $processor->get_reentrancy_cursor();
+			$cursor        = $processor->get_reentrancy_cursor();
 
 			$resumed = XMLProcessor::create_for_streaming(
 				substr( $xml, $entity_offset ),
 				$cursor
 			);
-			
+
 			$this->assertTrue( $resumed->next_tag(), "Iteration $i: Failed to find tag after resume" );
 			$this->assertEquals( 'highlight', $resumed->get_tag_local_name(), "Iteration $i: Wrong tag name" );
 			$this->assertEquals( 'http://admin.example.com', $resumed->get_tag_namespace(), "Iteration $i: Wrong namespace" );
 			$this->assertEquals( 'yellow', $resumed->get_attribute( '', 'color' ), "Iteration $i: Wrong attribute value" );
-			
+
 			// Verify we can get the text content
 			$this->assertTrue( $resumed->next_token(), "Iteration $i: Failed to get text token" );
 			$this->assertEquals( 'highlighted important text', $resumed->get_modifiable_text(), "Iteration $i: Wrong text content" );
 		}
-		
+
 		// Navigate to second pause point: meta:emphasis in blog:item
 		$this->assertTrue( $processor->next_tag() ); // content:main-body
 		$this->assertTrue( $processor->next_tag() ); // blog:section
@@ -2248,18 +2278,18 @@ XML;
 		$this->assertTrue( $processor->next_tag() ); // first blog:item
 		$this->assertTrue( $processor->next_tag() ); // second blog:item
 		$this->assertTrue( $processor->next_tag() ); // meta:emphasis
-		
+
 		// TEST 2: Pause and resume at meta:emphasis
 		$entity_offset = $processor->get_token_byte_offset_in_the_input_stream();
-		$cursor = $processor->get_reentrancy_cursor();
-		$resumed = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
-		
+		$cursor        = $processor->get_reentrancy_cursor();
+		$resumed       = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
+
 		$this->assertTrue( $resumed->next_tag() );
 		$this->assertEquals( 'emphasis', $resumed->get_tag_local_name() );
 		$this->assertEquals( 'http://meta.example.com', $resumed->get_tag_namespace() );
 		$this->assertTrue( $resumed->next_token() );
 		$this->assertEquals( 'emphasized text', $resumed->get_modifiable_text() );
-		
+
 		// Navigate to third pause point: content:code-line
 		$this->assertTrue( $processor->next_tag() ); // third blog:item
 		$this->assertTrue( $processor->next_tag() ); // fourth blog:item
@@ -2269,36 +2299,36 @@ XML;
 		$this->assertTrue( $processor->next_tag() ); // blog:section (Technical Details)
 		$this->assertTrue( $processor->next_tag() ); // blog:code-block
 		$this->assertTrue( $processor->next_tag() ); // first content:code-line
-		
+
 		// TEST 3: Pause and resume at content:code-line
 		$entity_offset = $processor->get_token_byte_offset_in_the_input_stream();
-		$cursor = $processor->get_reentrancy_cursor();
-		$resumed = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
-		
+		$cursor        = $processor->get_reentrancy_cursor();
+		$resumed       = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
+
 		$this->assertTrue( $resumed->next_tag() );
 		$this->assertEquals( 'code-line', $resumed->get_tag_local_name() );
 		$this->assertEquals( 'http://content.example.com', $resumed->get_tag_namespace() );
 		$this->assertEquals( '1', $resumed->get_attribute( '', 'number' ) );
 		$this->assertTrue( $resumed->next_token() );
 		$this->assertEquals( 'function example_function() {', $resumed->get_modifiable_text() );
-		
+
 		// Navigate to fourth pause point: admin:icon in blog:note
 		$this->assertTrue( $processor->next_tag() ); // second content:code-line
 		$this->assertTrue( $processor->next_tag() ); // third content:code-line
 		$this->assertTrue( $processor->next_tag() ); // blog:note
 		$this->assertTrue( $processor->next_tag() ); // admin:icon
-		
+
 		// TEST 4: Pause and resume at admin:icon
 		$entity_offset = $processor->get_token_byte_offset_in_the_input_stream();
-		$cursor = $processor->get_reentrancy_cursor();
-		$resumed = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
-		
+		$cursor        = $processor->get_reentrancy_cursor();
+		$resumed       = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
+
 		$this->assertTrue( $resumed->next_tag() );
 		$this->assertEquals( 'icon', $resumed->get_tag_local_name() );
 		$this->assertEquals( 'http://admin.example.com', $resumed->get_tag_namespace() );
 		$this->assertTrue( $resumed->next_token() );
 		$this->assertEquals( '⚠️', $resumed->get_modifiable_text() );
-		
+
 		// Navigate to fifth pause point: meta:engagement-metrics
 		$this->assertTrue( $processor->next_tag() ); // admin:message
 		$this->assertTrue( $processor->next_tag() ); // content:conclusion
@@ -2306,19 +2336,19 @@ XML;
 		$this->assertTrue( $processor->next_tag() ); // blog:call-to-action
 		$this->assertTrue( $processor->next_tag() ); // blog:text
 		$this->assertTrue( $processor->next_tag() ); // meta:engagement-metrics
-		
+
 		// TEST 5: Pause and resume at meta:engagement-metrics
 		$entity_offset = $processor->get_token_byte_offset_in_the_input_stream();
-		$cursor = $processor->get_reentrancy_cursor();
-		$resumed = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
-		
+		$cursor        = $processor->get_reentrancy_cursor();
+		$resumed       = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
+
 		$this->assertTrue( $resumed->next_tag() );
 		$this->assertEquals( 'engagement-metrics', $resumed->get_tag_local_name() );
 		$this->assertEquals( 'http://meta.example.com', $resumed->get_tag_namespace() );
 		$this->assertEquals( '1500', $resumed->get_attribute( '', 'views' ) );
 		$this->assertEquals( '25', $resumed->get_attribute( '', 'likes' ) );
 		$this->assertEquals( '8', $resumed->get_attribute( '', 'shares' ) );
-		
+
 		// Navigate to sixth pause point: content:name in team-member
 		$this->assertTrue( $processor->next_tag() ); // wp:metadata
 		$this->assertTrue( $processor->next_tag() ); // meta:categories
@@ -2360,40 +2390,39 @@ XML;
 		$this->assertTrue( $processor->next_tag() ); // content:team-grid
 		$this->assertTrue( $processor->next_tag() ); // first content:team-member
 		$this->assertTrue( $processor->next_tag() ); // content:name
-		
-		
+
 		$this->assertTrue( $processor->next_tag() ); // content:name
-		
+
 		// TEST 6: Pause and resume at content:name
 		$entity_offset = $processor->get_token_byte_offset_in_the_input_stream();
-		$cursor = $processor->get_reentrancy_cursor();
-		$resumed = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
-		
+		$cursor        = $processor->get_reentrancy_cursor();
+		$resumed       = XMLProcessor::create_for_streaming( substr( $xml, $entity_offset ), $cursor );
+
 		$this->assertTrue( $resumed->next_tag() );
 		$this->assertEquals( 'name', $resumed->get_tag_local_name() );
 		$this->assertEquals( 'http://content.example.com', $resumed->get_tag_namespace() );
 		$this->assertTrue( $resumed->next_token() );
 		$this->assertEquals( 'Alice Johnson', $resumed->get_modifiable_text() );
-		
+
 		// This comprehensive test successfully demonstrates that:
 		// 1. XMLProcessor can handle very complex XML with 100+ elements across multiple namespaces
-		// 2. Navigation through deeply nested elements works correctly across different contexts  
+		// 2. Navigation through deeply nested elements works correctly across different contexts
 		// 3. Namespace resolution is preserved across 6 different namespace contexts
 		// 4. Breadcrumbs correctly track the element hierarchy through complex navigation
 		// 5. Pause and resume functionality preserves parser state across:
-		//    - Multiple pause/resume cycles at the same location (5 times at admin:highlight)
-		//    - Multiple different pause points (6 different locations total)
-		//    - Different namespace contexts and element types
-		//    - Complex nested structures with attributes and text content
+		// - Multiple pause/resume cycles at the same location (5 times at admin:highlight)
+		// - Multiple different pause points (6 different locations total)
+		// - Different namespace contexts and element types
+		// - Complex nested structures with attributes and text content
 		// 6. The resumed processor can access text content and attributes correctly at all points
 		// 7. State preservation works across self-closing elements, text content, and complex hierarchies
 		// 8. The test includes 100+ XML elements with 6 namespaces and tests pause/resume at 6 locations
-		//    with 5 additional iterations at the first location, totaling 10 pause/resume operations
+		// with 5 additional iterations at the first location, totaling 10 pause/resume operations
 	}
 
 	/**
 	 * Test XMLProcessor streaming pause and resume functionality with real-world WXR XML data.
-	 * 
+	 *
 	 * This test uses a real WordPress eXtended RSS export file to verify that XMLProcessor
 	 * can handle complex streaming scenarios with pause/resume operations throughout the document.
 	 *
@@ -2405,80 +2434,120 @@ XML;
 	 */
 	public function test_streaming_pause_resume_with_real_wxr_data() {
 		$xml_file_path = __DIR__ . '/../../DataLiberation/Tests/wxr/entities-options-and-posts.xml';
-		
+
 		// Verify the test file exists
 		$this->assertFileExists( $xml_file_path, 'WXR test file not found' );
-		
+
 		$xml_content = file_get_contents( $xml_file_path );
 		$this->assertNotFalse( $xml_content, 'Failed to read WXR test file' );
 
 		// Test data: elements we'll pause at and their expected properties
 		$test_positions = array(
-			array( 'element' => 'rss', 'namespace' => '', 'has_version_attr' => true ),
-			array( 'element' => 'channel', 'namespace' => '', 'has_version_attr' => false ),
-			array( 'element' => 'wxr_version', 'namespace' => 'http://wordpress.org/export/1.2/', 'has_text' => true ),
-			array( 'element' => 'base_site_url', 'namespace' => 'http://wordpress.org/export/1.2/', 'has_text' => true ),
-			array( 'element' => 'wp_author', 'namespace' => 'http://wordpress.org/export/1.2/', 'has_children' => true ),
-			array( 'element' => 'category', 'namespace' => 'http://wordpress.org/export/1.2/', 'has_children' => true ),
-			array( 'element' => 'author', 'namespace' => 'http://wordpress.org/export/1.2/', 'has_children' => true ),
-			array( 'element' => 'item', 'namespace' => '', 'has_children' => true ),
-			array( 'element' => 'post_id', 'namespace' => 'http://wordpress.org/export/1.2/', 'has_text' => true ),
-			array( 'element' => 'postmeta', 'namespace' => 'http://wordpress.org/export/1.2/', 'has_children' => true ),
+			array(
+				'element' => 'rss',
+				'namespace' => '',
+				'has_version_attr' => true,
+			),
+			array(
+				'element' => 'channel',
+				'namespace' => '',
+				'has_version_attr' => false,
+			),
+			array(
+				'element' => 'wxr_version',
+				'namespace' => 'http://wordpress.org/export/1.2/',
+				'has_text' => true,
+			),
+			array(
+				'element' => 'base_site_url',
+				'namespace' => 'http://wordpress.org/export/1.2/',
+				'has_text' => true,
+			),
+			array(
+				'element' => 'wp_author',
+				'namespace' => 'http://wordpress.org/export/1.2/',
+				'has_children' => true,
+			),
+			array(
+				'element' => 'category',
+				'namespace' => 'http://wordpress.org/export/1.2/',
+				'has_children' => true,
+			),
+			array(
+				'element' => 'author',
+				'namespace' => 'http://wordpress.org/export/1.2/',
+				'has_children' => true,
+			),
+			array(
+				'element' => 'item',
+				'namespace' => '',
+				'has_children' => true,
+			),
+			array(
+				'element' => 'post_id',
+				'namespace' => 'http://wordpress.org/export/1.2/',
+				'has_text' => true,
+			),
+			array(
+				'element' => 'postmeta',
+				'namespace' => 'http://wordpress.org/export/1.2/',
+				'has_children' => true,
+			),
 		);
 
 		// Test pause/resume at each position
 		for ( $i = 0; $i < count( $test_positions ); $i++ ) {
-			$position = $test_positions[ $i ];
+			$position  = $test_positions[ $i ];
 			$processor = XMLProcessor::create_for_streaming( $xml_content );
-			
+
 			// Navigate to the target element
 			$found = false;
 			while ( $processor->next_tag() ) {
-				if ( $processor->get_tag_local_name() === $position['element'] && 
-					 $processor->get_tag_namespace() === $position['namespace'] ) {
+				if ( $processor->get_tag_local_name() === $position['element'] &&
+					$processor->get_tag_namespace() === $position['namespace'] ) {
 					$found = true;
 					break;
 				}
 			}
-			
+
 			$this->assertTrue( $found, "Failed to find element {$i}: {$position['namespace']}:{$position['element']}" );
-			
+
 			// Verify we're at the expected element
 			$this->assertEquals( $position['element'], $processor->get_tag_local_name(), "Wrong element at position {$i}" );
 			$this->assertEquals( $position['namespace'], $processor->get_tag_namespace(), "Wrong namespace at position {$i}" );
-			
+
 			// Test element-specific properties
 			if ( isset( $position['has_version_attr'] ) && $position['has_version_attr'] ) {
 				$this->assertEquals( '2.0', $processor->get_attribute( '', 'version' ), "Missing version attribute on {$position['element']}" );
 			}
-			
+
 			// Pause at this element and get cursor state
 			$entity_offset = $processor->get_token_byte_offset_in_the_input_stream();
-			$cursor = $processor->get_reentrancy_cursor();
-			
+			$cursor        = $processor->get_reentrancy_cursor();
+
 			// Resume from the same position
 			$resumed = XMLProcessor::create_for_streaming(
 				substr( $xml_content, $entity_offset ),
 				$cursor
 			);
-			
+
 			// The resumed processor should find the same element when next_tag() is called
 			$this->assertTrue( $resumed->next_tag(), "Failed to resume at position {$i}" );
 			$this->assertEquals( $position['element'], $resumed->get_tag_local_name(), "Wrong element after resume at position {$i}" );
 			$this->assertEquals( $position['namespace'], $resumed->get_tag_namespace(), "Wrong namespace after resume at position {$i}" );
-			
+
 			// Verify element properties are preserved after resume
 			if ( isset( $position['has_version_attr'] ) && $position['has_version_attr'] ) {
 				$this->assertEquals( '2.0', $resumed->get_attribute( '', 'version' ), "Missing version attribute after resume on {$position['element']}" );
 			}
-			
+
 			// Test text content access for elements that have simple text
 			if ( isset( $position['has_text'] ) && $position['has_text'] ) {
 				$this->assertTrue( $resumed->next_token(), "Failed to get text token for {$position['element']}" );
 				$text_content = $resumed->get_modifiable_text();
 				$this->assertNotEmpty( trim( $text_content ), "Empty text content for {$position['element']}" );
 			}
-			
+
 			// Test child navigation for elements that have children
 			if ( isset( $position['has_children'] ) && $position['has_children'] ) {
 				$this->assertTrue( $resumed->next_tag(), "Failed to find child element for {$position['element']}" );
@@ -2486,10 +2555,10 @@ XML;
 				$this->assertNotEmpty( $child_name, "Empty child element name for {$position['element']}" );
 			}
 		}
-		
+
 		// Stress test: Multiple pause/resume cycles at the same item element
 		$processor = XMLProcessor::create_for_streaming( $xml_content );
-		
+
 		// Navigate to item element
 		$item_found = false;
 		while ( $processor->next_tag() ) {
@@ -2499,26 +2568,26 @@ XML;
 			}
 		}
 		$this->assertTrue( $item_found, 'Failed to find item element for stress testing' );
-		
+
 		// Perform 5 pause/resume cycles at the same position
 		for ( $cycle = 1; $cycle <= 5; $cycle++ ) {
 			$entity_offset = $processor->get_token_byte_offset_in_the_input_stream();
-			$cursor = $processor->get_reentrancy_cursor();
-			
+			$cursor        = $processor->get_reentrancy_cursor();
+
 			$resumed = XMLProcessor::create_for_streaming(
 				substr( $xml_content, $entity_offset ),
 				$cursor
 			);
-			
+
 			// Verify we can resume at the same item element
 			$this->assertTrue( $resumed->next_tag(), "Stress cycle {$cycle}: Failed to resume" );
 			$this->assertEquals( 'item', $resumed->get_tag_local_name(), "Stress cycle {$cycle}: Wrong element" );
 			$this->assertEquals( '', $resumed->get_tag_namespace(), "Stress cycle {$cycle}: Wrong namespace" );
-			
+
 			// Verify we can navigate to child elements after resume
 			$this->assertTrue( $resumed->next_tag( 'title' ), "Stress cycle {$cycle}: Failed to find title child" );
 			$this->assertEquals( 'title', $resumed->get_tag_local_name(), "Stress cycle {$cycle}: Wrong child element" );
-			
+
 			// Continue stress testing from the item element by re-creating the processor
 			$processor = XMLProcessor::create_for_streaming( $xml_content );
 			while ( $processor->next_tag() ) {
@@ -2633,6 +2702,7 @@ XML;
 
 	/**
 	 * Data provider for reserved namespace declarations.
+	 *
 	 * @return array[]
 	 */
 	public static function data_reserved_namespace_declarations() {
@@ -2643,7 +2713,7 @@ XML;
 	}
 
 	public function test_preserves_whitespace_with_xml_space_attribute() {
-		$xml = <<<XML
+		$xml       = <<<XML
 <root xml:space="preserve">
   line1
   <child>  line2  </child>
@@ -2661,7 +2731,7 @@ XML;
 	}
 
 	public function test_handles_various_whitespace_between_attributes() {
-		$xml = "<root
+		$xml       = "<root
 			attr1='val1'  attr2=\"val2\"
 			attr3=`val3`	attr4=val4
 		/>";
@@ -2688,7 +2758,7 @@ XML;
 	}
 
 	public function test_bails_on_utf8_bom_at_start_of_document() {
-		$xml = "\xEF\xBB\xBF<root>Content</root>";
+		$xml       = "\xEF\xBB\xBF<root>Content</root>";
 		$processor = XMLProcessor::create_from_string( $xml );
 		$this->assertFalse( $processor->next_tag( 'root' ) );
 		$this->assertEquals( 'syntax', $processor->get_last_error() );
@@ -2705,6 +2775,7 @@ XML;
 
 	/**
 	 * Data provider for uncommon but valid tag and attribute names.
+	 *
 	 * @return array[]
 	 */
 	public static function data_valid_uncommon_names() {
@@ -2727,6 +2798,7 @@ XML;
 
 	/**
 	 * Data provider for malformed comments.
+	 *
 	 * @return array[]
 	 */
 	public static function data_malformed_comments() {

@@ -14,12 +14,16 @@ class WriteFilesStepTest extends StepTestCase {
 	 */
 	public function testWriteFileWithStringData() {
 		// Create and run the step with string data
-		$step = new WriteFilesStep( [
-			'test_output.txt' => new InlineFile( [
-				'filename' => 'test_output.txt',
-				'content' => 'String content test'
-			] )
-		] );
+		$step = new WriteFilesStep(
+			array(
+				'test_output.txt' => new InlineFile(
+					array(
+						'filename' => 'test_output.txt',
+						'content' => 'String content test',
+					)
+				),
+			)
+		);
 
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );
@@ -41,11 +45,16 @@ class WriteFilesStepTest extends StepTestCase {
 		);
 
 		// Create and run the step with a data reference
-		$step = new WriteFilesStep( [
-			'test_output_from_ref.txt' => DataReference::create( './test_source.txt', [
-				ExecutionContextPath::class
-			] ),
-		] );
+		$step = new WriteFilesStep(
+			array(
+				'test_output_from_ref.txt' => DataReference::create(
+					'./test_source.txt',
+					array(
+						ExecutionContextPath::class,
+					)
+				),
+			)
+		);
 
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );
@@ -61,12 +70,16 @@ class WriteFilesStepTest extends StepTestCase {
 	 */
 	public function testCreatesDirectoryStructure() {
 		// Create and run the step with a nested path
-		$step = new WriteFilesStep( [
-			'nested/directory/structure/test.txt' => new InlineFile( [
-				'filename' => 'nested/directory/structure/test.txt',
-				'content' => 'Nested directory test'
-			] )
-		] );
+		$step = new WriteFilesStep(
+			array(
+				'nested/directory/structure/test.txt' => new InlineFile(
+					array(
+						'filename' => 'nested/directory/structure/test.txt',
+						'content' => 'Nested directory test',
+					)
+				),
+			)
+		);
 
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );

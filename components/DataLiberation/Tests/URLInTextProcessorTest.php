@@ -10,7 +10,7 @@ class URLInTextProcessorTest extends TestCase {
 	 */
 	public function test_finds_next_url_when_base_url_is_used( $url, $parsed_href, $text, $which_url = 1 ) {
 		$p = new URLInTextProcessor( $text, 'https://w.org' );
-		for ( $i = 0; $i < $which_url; $i ++ ) {
+		for ( $i = 0; $i < $which_url; $i++ ) {
 			$this->assertTrue( $p->next_url(), 'Failed to find the URL in the text.' );
 		}
 		$this->assertEquals( $url, $p->get_raw_url(), 'Found a URL in the text, but it wasn\'t the expected one.' );

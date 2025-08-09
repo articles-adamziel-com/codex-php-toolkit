@@ -35,13 +35,13 @@ class RewriteUrlsTest extends TestCase {
 				'http://legacy-blog.com',
 				'https://modern-webstore.org',
 			),
-			'Domain in a block attribute expressed with JSON UTF-8 escape sequences'                                  => array(
+			'Domain in a block attribute expressed with JSON UTF-8 escape sequences' => array(
 				'<!-- wp:image {"src": "https:\/\/\u006c\u0065\u0067\u0061\u0063y-bl\u006fg.\u0063\u006fm/wp-content/image.png"} -->',
 				'<!-- wp:image {"src":"https:\/\/modern-webstore.org\/wp-content\/image.png"} -->',
 				'https://legacy-blog.com',
 				'https://modern-webstore.org',
 			),
-			'Domain in an HTML attribute semantically expressing a URL'                                               => array(
+			'Domain in an HTML attribute semantically expressing a URL' => array(
 				<<<HTML
 				<a href="https://legacy-blog.com/contact-us/">Contact us</a>
 				<img src="https://legacy-blog.com/wp-content/assets/image.jpg">
@@ -59,13 +59,13 @@ HTML
 				'https://legacy-blog.com',
 				'https://modern-webstore.org',
 			),
-			'Path in an HTML attribute semantically expressing a URL – source path has no trailing slash'             => array(
+			'Path in an HTML attribute semantically expressing a URL – source path has no trailing slash' => array(
 				'<a href="/~jappleseed/1997.10.1/nuclear-fusion/">Nuclear fusion</a>',
 				'<a href="/blog/nuclear-fusion/">Nuclear fusion</a>',
 				'https://legacy-blog.com/~jappleseed/1997.10.1',
 				'https://modern-webstore.org/blog/',
 			),
-			'Path in an HTML attribute semantically expressing a URL – source path has a trailing slash'              => array(
+			'Path in an HTML attribute semantically expressing a URL – source path has a trailing slash' => array(
 				'<a href="/~jappleseed/1997.10.1/nuclear-fusion/">Nuclear fusion</a>',
 				'<a href="/blog/nuclear-fusion/">Nuclear fusion</a>',
 				'https://legacy-blog.com/~jappleseed/1997.10.1/',
@@ -89,13 +89,13 @@ HTML
 			 *
 			 * "/blog/%65-reasons-to-migrate-data/"
 			 */
-			'Path in an HTML attribute with URLencoded data'                                                          => array(
+			'Path in an HTML attribute with URLencoded data' => array(
 				'<a href="/~jappleseed/1997.10.1/%2561-reasons-to-migrate-data/">61 reasons to migrate data</a>',
 				'<a href="/blog/%2561-reasons-to-migrate-data/">61 reasons to migrate data</a>',
 				'https://legacy-blog.com/~jappleseed/1997.10.1/',
 				'https://modern-webstore.org/blog/',
 			),
-			'Domain in an HTML attribute – encoded using HTML entities'                                               => array(
+			'Domain in an HTML attribute – encoded using HTML entities' => array(
 				'<a href="&#104;&#116;tps://&#108;&#101;g&#97;&#99;&#121;&#45;&#98;&#108;&#111;&#103;.&#99;&#111;&#109;/pages/contact-us">Contact us</a>',
 				'<a href="https://modern-webstore.org/pages/contact-us">Contact us</a>',
 				'https://legacy-blog.com',
@@ -115,25 +115,25 @@ HTML
 			// 'https://legacy-blog.com',
 			// 'https://modern-webstore.org'
 			// ],
-			'Domain in a regular text snippet – preceeded by a protocol'                                              => array(
+			'Domain in a regular text snippet – preceeded by a protocol' => array(
 				'Join the team at https://legacy-blog.com/we-are-hiring',
 				'Join the team at https://modern-webstore.org/we-are-hiring',
 				'https://legacy-blog.com',
 				'https://modern-webstore.org',
 			),
-			'Domain in a regular text snippet – not preceeded by a protocol'                                          => array(
+			'Domain in a regular text snippet – not preceeded by a protocol' => array(
 				'Join the team at legacy-blog.com/we-are-hiring',
 				'Join the team at modern-webstore.org/we-are-hiring',
 				'https://legacy-blog.com',
 				'https://modern-webstore.org',
 			),
-			'Domain in a regular text snippet – preceeded by a protocol – encoded using HTML entities'                => array(
+			'Domain in a regular text snippet – preceeded by a protocol – encoded using HTML entities' => array(
 				'Join the team at https://&#108;&#101;g&#97;&#99;&#121;&#45;&#98;&#108;&#111;&#103;.&#99;&#111;&#109;/pages/contact-us',
 				'Join the team at https://modern-webstore.org/pages/contact-us',
 				'https://legacy-blog.com',
 				'https://modern-webstore.org',
 			),
-			'Domain in a regular text snippet – no protocol – encoded using HTML entities'                            => array(
+			'Domain in a regular text snippet – no protocol – encoded using HTML entities' => array(
 				'Join the team at &#108;&#101;g&#97;&#99;&#121;&#45;&#98;&#108;&#111;&#103;.&#99;&#111;&#109;/pages/contact-us',
 				'Join the team at modern-webstore.org/pages/contact-us',
 				'https://legacy-blog.com',

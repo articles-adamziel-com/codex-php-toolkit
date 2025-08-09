@@ -36,21 +36,20 @@ if ( ! defined( 'UTF8_DECODER_REJECT' ) ) {
  *     false === utf8_is_valid_byte_stream( "Broken stream: \xC2\xC2", 0, $error_at );
  *     15    === $error_at;
  *
- * @param  string  $bytes  Text to validate as UTF-8 bytes.
- * @param  int  $starting_byte  Byte offset in string where decoding should begin.
- * @param  int|null  $first_error_byte_at  Optional. If provided and byte stream fails to validate,
- *                                      will be set to the byte offset where the first invalid
- *                                      byte appeared. Otherwise, will not be set.
+ * @param  string   $bytes  Text to validate as UTF-8 bytes.
+ * @param  int      $starting_byte  Byte offset in string where decoding should begin.
+ * @param  int|null $first_error_byte_at  Optional. If provided and byte stream fails to validate,
+ *                                     will be set to the byte offset where the first invalid
+ *                                     byte appeared. Otherwise, will not be set.
  *
  * @return bool Whether the given byte stream represents valid UTF-8.
  * @since {WP_VERSION}
- *
  */
 function utf8_is_valid_byte_stream( string $bytes, int $starting_byte = 0, ?int &$first_error_byte_at = null ): bool {
 	$state         = UTF8_DECODER_ACCEPT;
 	$last_start_at = $starting_byte;
 
-	for ( $at = $starting_byte, $end = strlen( $bytes ); $at < $end && UTF8_DECODER_REJECT !== $state; $at ++ ) {
+	for ( $at = $starting_byte, $end = strlen( $bytes ); $at < $end && UTF8_DECODER_REJECT !== $state; $at++ ) {
 		if ( UTF8_DECODER_ACCEPT === $state ) {
 			$last_start_at = $at;
 		}
@@ -73,14 +72,13 @@ function utf8_is_valid_byte_stream( string $bytes, int $starting_byte = 0, ?int 
  * If the byte stream fails to properly decode as UTF-8 this function will set the
  * byte index of the first error byte and report the number of decoded code points.
  *
- * @param  string  $bytes  Text for which to count code points.
- * @param  int|null  $first_error_byte_at  Optional. If provided, will be set upon finding
- *                                      the first invalid byte.
+ * @param  string   $bytes  Text for which to count code points.
+ * @param  int|null $first_error_byte_at  Optional. If provided, will be set upon finding
+ *                                     the first invalid byte.
  *
  * @return int How many code points were decoded in the given byte stream before an error
  *             or before reaching the end of the string.
  * @since {WP_VERSION}
- *
  */
 function utf8_code_point_count( string $bytes, ?int &$first_error_byte_at = null ): int {
 	$state         = UTF8_DECODER_ACCEPT;
@@ -88,7 +86,7 @@ function utf8_code_point_count( string $bytes, ?int &$first_error_byte_at = null
 	$count         = 0;
 	$code_point    = 0;
 
-	for ( $at = 0, $end = strlen( $bytes ); $at < $end && UTF8_DECODER_REJECT !== $state; $at ++ ) {
+	for ( $at = 0, $end = strlen( $bytes ); $at < $end && UTF8_DECODER_REJECT !== $state; $at++ ) {
 		if ( UTF8_DECODER_ACCEPT === $state ) {
 			$last_start_at = $at;
 		}
@@ -96,7 +94,7 @@ function utf8_code_point_count( string $bytes, ?int &$first_error_byte_at = null
 		$state = utf8_decoder_apply_byte( $bytes[ $at ], $state, $code_point );
 
 		if ( UTF8_DECODER_ACCEPT === $state ) {
-			++ $count;
+			++$count;
 		}
 	}
 
@@ -119,14 +117,14 @@ function utf8_code_point_count( string $bytes, ?int &$first_error_byte_at = null
  *
  * @access private
  *
- * @param  string  $byte  Next byte to be applied in UTF-8 decoding or validation.
- * @param  int  $state  UTF-8 decoding state, one of the following values:<br><ul>
- *                             <li>`UTF8_DECODER_ACCEPT`: Decoder is ready for a new code point.<br>
- *                             <li>`UTF8_DECODER_REJECT`: An error has occurred.<br>
- *                             Any other positive value: Decoder is waiting for additional bytes.
- * @param  int|null  $code_point  Optional. If provided, will accumulate the decoded code point as
- *                             each byte is processed. If not provided or unable to decode, will
- *                             not be set, or will be set to invalid and unusable data.
+ * @param  string   $byte  Next byte to be applied in UTF-8 decoding or validation.
+ * @param  int      $state  UTF-8 decoding state, one of the following values:<br><ul>
+ *                                 <li>`UTF8_DECODER_ACCEPT`: Decoder is ready for a new code point.<br>
+ *                                 <li>`UTF8_DECODER_REJECT`: An error has occurred.<br>
+ *                                 Any other positive value: Decoder is waiting for additional bytes.
+ * @param  int|null $code_point  Optional. If provided, will accumulate the decoded code point as
+ *                            each byte is processed. If not provided or unable to decode, will
+ *                            not be set, or will be set to invalid and unusable data.
  *
  * @return int Next decoder state after processing the current byte.
  */
@@ -175,9 +173,9 @@ function utf8_decoder_apply_byte( string $byte, int $state, int &$code_point = 0
  * This function does not permit passing negative indices and will return
  * the original string if such are provide.
  *
- * @param  string  $text  Input text from which to extract.
- * @param  int  $from  Start extracting after this many code-points.
- * @param  int  $length  Extract this many code points.
+ * @param  string $text  Input text from which to extract.
+ * @param  int    $from  Start extracting after this many code-points.
+ * @param  int    $length  Extract this many code points.
  *
  * @return string Extracted slice of input string.
  */
@@ -199,28 +197,28 @@ function utf8_substr( string $text, int $from = 0, ?int $length = null ): string
 		$decoder_state = utf8_decoder_apply_byte( $text[ $position_in_input ], $decoder_state );
 
 		if ( UTF8_DECODER_ACCEPT === $decoder_state ) {
-			++ $position_in_input;
+			++$position_in_input;
 
 			if ( $seen_code_points >= $from ) {
-				++ $sliced_code_points;
+				++$sliced_code_points;
 				$buffer .= substr( $text, $code_point_at, $position_in_input - $code_point_at );
 			}
 
-			++ $seen_code_points;
+			++$seen_code_points;
 			$code_point_at = $position_in_input;
 		} elseif ( UTF8_DECODER_REJECT === $decoder_state ) {
 			$buffer .= "\u{FFFD}";
 
 			// Skip to the start of the next code point.
 			while ( UTF8_DECODER_REJECT === $decoder_state && $position_in_input < $end_byte ) {
-				$decoder_state = utf8_decoder_apply_byte( $text[ ++ $position_in_input ], UTF8_DECODER_ACCEPT );
+				$decoder_state = utf8_decoder_apply_byte( $text[ ++$position_in_input ], UTF8_DECODER_ACCEPT );
 			}
 
-			++ $seen_code_points;
+			++$seen_code_points;
 			$code_point_at = $position_in_input;
 			$decoder_state = UTF8_DECODER_ACCEPT;
 		} else {
-			++ $position_in_input;
+			++$position_in_input;
 		}
 	}
 
@@ -235,9 +233,9 @@ function utf8_substr( string $text, int $from = 0, ?int $length = null ): string
  * This function does not permit passing negative indices and will return
  * null if such are provided.
  *
- * @param  string  $text  Input text from which to extract.
- * @param  int  $byte_offset  Start at this byte offset in the input text.
- * @param  int  $matched_bytes  How many bytes were matched to produce the codepoint.
+ * @param  string $text  Input text from which to extract.
+ * @param  int    $byte_offset  Start at this byte offset in the input text.
+ * @param  int    $matched_bytes  How many bytes were matched to produce the codepoint.
  *
  * @return int Unicode codepoint.
  */
@@ -257,14 +255,14 @@ function utf8_codepoint_at( string $text, int $byte_offset = 0, &$matched_bytes 
 		$decoder_state = utf8_decoder_apply_byte( $text[ $position_in_input ], $decoder_state );
 
 		if ( UTF8_DECODER_ACCEPT === $decoder_state ) {
-			++ $position_in_input;
+			++$position_in_input;
 			$codepoint = utf8_ord( substr( $text, $code_point_at, $position_in_input - $code_point_at ) );
 			break;
 		} elseif ( UTF8_DECODER_REJECT === $decoder_state ) {
 			$codepoint = utf8_ord( "\u{FFFD}" );
 			break;
 		} else {
-			++ $position_in_input;
+			++$position_in_input;
 		}
 	}
 
@@ -276,7 +274,7 @@ function utf8_codepoint_at( string $text, int $byte_offset = 0, &$matched_bytes 
 /**
  * Convert a UTF-8 byte sequence to its Unicode codepoint.
  *
- * @param  string  $character  UTF-8 encoded byte sequence representing a single Unicode character.
+ * @param  string $character  UTF-8 encoded byte sequence representing a single Unicode character.
  *
  * @return int Unicode codepoint.
  */

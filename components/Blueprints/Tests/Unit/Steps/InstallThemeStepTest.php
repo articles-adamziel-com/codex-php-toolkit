@@ -44,7 +44,8 @@ PHP;
 
 	public function testInstallThemeWithActivation() {
 		$this->execution_context->mkdir(
-			'test-theme', [ 'recursive' => true ]
+			'test-theme',
+			array( 'recursive' => true )
 		);
 		$this->execution_context->put_contents(
 			'test-theme/style.css',
@@ -56,9 +57,12 @@ PHP;
 		);
 
 		$step = new InstallThemeStep(
-			DataReference::create( './test-theme', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./test-theme',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			true
 		);
 
@@ -76,7 +80,6 @@ PHP;
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( get_option('stylesheet') );
 PHP
-
 		)->outputFileContent;
 
 		$this->assertEquals( 'test-theme', trim( $active_theme ) );
@@ -84,7 +87,8 @@ PHP
 
 	public function testInstallThemeWithoutActivation() {
 		$this->execution_context->mkdir(
-			'test-theme', [ 'recursive' => true ]
+			'test-theme',
+			array( 'recursive' => true )
 		);
 		$this->execution_context->put_contents(
 			'test-theme/style.css',
@@ -96,9 +100,12 @@ PHP
 		);
 
 		$step = new InstallThemeStep(
-			DataReference::create( './test-theme', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./test-theme',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			false
 		);
 
@@ -116,7 +123,6 @@ PHP
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( get_option('stylesheet') );
 PHP
-
 		)->outputFileContent;
 
 		$this->assertNotEquals( 'test-theme', trim( $active_theme ) );
@@ -132,9 +138,12 @@ PHP
 		}
 
 		$step = new InstallThemeStep(
-			DataReference::create( './zipped-test-theme.zip', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./zipped-test-theme.zip',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			true
 		);
 
@@ -152,7 +161,6 @@ PHP
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( get_option('stylesheet') );
 PHP
-
 		)->outputFileContent;
 
 		$this->assertEquals( 'test-theme', trim( $active_theme ) );

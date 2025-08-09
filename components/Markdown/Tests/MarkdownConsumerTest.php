@@ -111,7 +111,7 @@ MD
 				'markdown' => <<<MD
 A simple paragraph 
 MD
-				,	
+				,
 				'expected' => '<!-- wp:paragraph --><p>A simple paragraph </p><!-- /wp:paragraph -->',
 			),
 			'A simple paragraph – regular HTML formatting – no space at the end' => array(

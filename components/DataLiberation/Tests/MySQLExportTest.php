@@ -51,10 +51,10 @@ class MySQLExportTest extends TestCase {
 		 */
 		if ( version_compare( PHP_VERSION, '8.1', '<' ) ) {
 			$expected = "INSERT INTO posts (ID, post_title) VALUES ('1', 'First Post');\n" .
-			            "INSERT INTO posts (ID, post_title) VALUES ('2', 'Second Post');\n";
+						"INSERT INTO posts (ID, post_title) VALUES ('2', 'Second Post');\n";
 		} else {
 			$expected = "INSERT INTO posts (ID, post_title) VALUES (1, 'First Post');\n" .
-			            "INSERT INTO posts (ID, post_title) VALUES (2, 'Second Post');\n";
+						"INSERT INTO posts (ID, post_title) VALUES (2, 'Second Post');\n";
 		}
 
 		$this->assertEquals( $expected, $this->memory_pipe->consume_all() );
@@ -170,10 +170,10 @@ SQL;
 		 */
 		if ( version_compare( PHP_VERSION, '8.1', '<' ) ) {
 			$expected = "INSERT INTO posts (ID, post_title) VALUES ('1', 'First Post');\n" .
-			            "INSERT INTO posts (ID, post_title) VALUES ('2', 'Second Post');\n";
+						"INSERT INTO posts (ID, post_title) VALUES ('2', 'Second Post');\n";
 		} else {
 			$expected = "INSERT INTO posts (ID, post_title) VALUES (1, 'First Post');\n" .
-			            "INSERT INTO posts (ID, post_title) VALUES (2, 'Second Post');\n";
+						"INSERT INTO posts (ID, post_title) VALUES (2, 'Second Post');\n";
 		}
 
 		$this->assertEquals( $expected, $this->memory_pipe->consume_all() );

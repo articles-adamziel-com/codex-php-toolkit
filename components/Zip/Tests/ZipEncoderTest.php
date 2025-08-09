@@ -9,9 +9,9 @@ use WordPress\Zip\ZipEncoder;
 
 class ZipEncoderTest extends TestCase {
 
-	private $tempDir = '';
+	private $tempDir        = '';
 	private $tempSourceFile = '';
-	private $tempZipPath = '';
+	private $tempZipPath    = '';
 
 	/**
 	 * @before

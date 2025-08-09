@@ -57,8 +57,8 @@ class StreamImporterTest extends TestCase {
 	 */
 	public function test_stylish_press_local_file() {
 		$sink = new class() {
-			public $imported_entities = [];
-			public $imported_attachments = [];
+			public $imported_entities    = array();
+			public $imported_attachments = array();
 
 			public function import_entity( $entity ) {
 				$this->imported_entities[] = $entity;
@@ -70,12 +70,15 @@ class StreamImporterTest extends TestCase {
 			}
 		};
 
-		$importer = StreamImporter::create_for_wxr_file( __DIR__ . '/wxr/stylish-press.xml', [
-			'new_site_content_root_url' => 'http://127.0.0.1:9400',
-			'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
-			'uploads_path' => $this->tmp_dir,
-			'entity_sink' => $sink
-		] );
+		$importer = StreamImporter::create_for_wxr_file(
+			__DIR__ . '/wxr/stylish-press.xml',
+			array(
+				'new_site_content_root_url' => 'http://127.0.0.1:9400',
+				'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
+				'uploads_path' => $this->tmp_dir,
+				'entity_sink' => $sink,
+			)
+		);
 		while ( $importer->next_step() || $importer->advance_to_next_stage() ) {
 			// noop
 		}
@@ -87,8 +90,8 @@ class StreamImporterTest extends TestCase {
 	 */
 	public function test_stylish_press_remote_stream() {
 		$sink = new class() {
-			public $imported_entities = [];
-			public $imported_attachments = [];
+			public $imported_entities    = array();
+			public $imported_attachments = array();
 
 			public function import_entity( $entity ) {
 				$this->imported_entities[] = $entity;
@@ -101,21 +104,26 @@ class StreamImporterTest extends TestCase {
 		};
 
 		$entity_reader_factory = function ( $cursor ) {
-			$stream = new RequestReadStream(new Request(
-				'https://raw.githubusercontent.com/wordpress/blueprints/trunk/blueprints/stylish-press/site-content.wxr'
-			));
+			$stream = new RequestReadStream(
+				new Request(
+					'https://raw.githubusercontent.com/wordpress/blueprints/trunk/blueprints/stylish-press/site-content.wxr'
+				)
+			);
 			return WXREntityReader::create(
 				$stream,
 				$cursor
 			);
 		};
 
-		$importer = StreamImporter::create( $entity_reader_factory, [
-			'new_site_content_root_url' => 'http://127.0.0.1:9400',
-			'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
-			'uploads_path' => $this->tmp_dir,
-			'entity_sink' => $sink
-		] );
+		$importer = StreamImporter::create(
+			$entity_reader_factory,
+			array(
+				'new_site_content_root_url' => 'http://127.0.0.1:9400',
+				'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
+				'uploads_path' => $this->tmp_dir,
+				'entity_sink' => $sink,
+			)
+		);
 		while ( $importer->next_step() || $importer->advance_to_next_stage() ) {
 			// noop
 		}
@@ -124,11 +132,14 @@ class StreamImporterTest extends TestCase {
 
 	public function test_frontloading() {
 		$wxr_path = __DIR__ . '/wxr/frontloading-1-attachment.xml';
-		$importer = StreamImporter::create_for_wxr_file( $wxr_path, [
-			'new_site_content_root_url' => 'http://127.0.0.1:9400',
-			'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
-			'uploads_path' => $this->tmp_dir,
-		] );
+		$importer = StreamImporter::create_for_wxr_file(
+			$wxr_path,
+			array(
+				'new_site_content_root_url' => 'http://127.0.0.1:9400',
+				'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
+				'uploads_path' => $this->tmp_dir,
+			)
+		);
 		$this->skip_to_stage( $importer, StreamImporter::STAGE_FRONTLOAD_ASSETS );
 		while ( $importer->next_step() ) {
 			// noop
@@ -141,18 +152,21 @@ class StreamImporterTest extends TestCase {
 	public function test_resume_frontloading() {
 		$this->markTestSkipped( 'The tested file is getting downloaded too quickly for this test to work. There is nothing to resume. @TODO: use a larger file or a smaller chunk size.' );
 		$wxr_path = __DIR__ . '/wxr/frontloading-1-attachment.xml';
-		$importer = StreamImporter::create_for_wxr_file( $wxr_path, [
-			'entity_sink' => '',
-			'new_site_content_root_url' => 'http://127.0.0.1:9400',
-			'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
-			'uploads_path' => $this->tmp_dir,
-		] );
+		$importer = StreamImporter::create_for_wxr_file(
+			$wxr_path,
+			array(
+				'entity_sink' => '',
+				'new_site_content_root_url' => 'http://127.0.0.1:9400',
+				'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
+				'uploads_path' => $this->tmp_dir,
+			)
+		);
 		$this->skip_to_stage( $importer, StreamImporter::STAGE_FRONTLOAD_ASSETS );
 
-		$progress = $importer->get_frontloading_progress();
+		$progress       = $importer->get_frontloading_progress();
 		$progress_url   = null;
 		$progress_value = null;
-		for ( $i = 0; $i < 20; ++ $i ) {
+		for ( $i = 0; $i < 20; ++$i ) {
 			$importer->next_step();
 			$progress = $importer->get_frontloading_progress();
 			if ( count( $progress ) === 0 ) {
@@ -172,17 +186,21 @@ class StreamImporterTest extends TestCase {
 		$this->assertGreaterThan( 0, $progress_value['total'] );
 
 		$cursor   = $importer->get_reentrancy_cursor();
-		$importer = StreamImporter::create_for_wxr_file( $wxr_path, [
-			'new_site_content_root_url' => 'http://127.0.0.1:9400',
-			'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
-			'uploads_path' => $this->tmp_dir,
-		], $cursor );
+		$importer = StreamImporter::create_for_wxr_file(
+			$wxr_path,
+			array(
+				'new_site_content_root_url' => 'http://127.0.0.1:9400',
+				'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
+				'uploads_path' => $this->tmp_dir,
+			),
+			$cursor
+		);
 		// Rewind back to the entity we were on.
 		$this->assertTrue( $importer->next_step() );
 
 		// Restart the download of the same entity – from scratch.
 		$progress_value = array();
-		for ( $i = 0; $i < 20; ++ $i ) {
+		for ( $i = 0; $i < 20; ++$i ) {
 			$progress = $importer->get_frontloading_progress();
 			if ( count( $progress ) === 0 ) {
 				continue;
@@ -206,35 +224,42 @@ class StreamImporterTest extends TestCase {
 	 */
 	public function test_resume_entity_import() {
 		$wxr_path = __DIR__ . '/wxr/entities-options-and-posts.xml';
-		$importer = StreamImporter::create_for_wxr_file( $wxr_path, [
-			'new_site_content_root_url' => 'http://127.0.0.1:9400',
-			'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
-			'uploads_path' => sys_get_temp_dir() . '/uploads',
-			'entity_sink' => new class() {
-				public $imported_entities = [];
-				public function import_entity( $entity ) {
-					$this->imported_entities[] = $entity;
-					return true;
-				}
-			},
-		] );
-		$this->skip_to_stage( $importer, StreamImporter::STAGE_IMPORT_ENTITIES );
-
-		for ( $i = 0; $i < 11; ++ $i ) {
-			$this->assertTrue( $importer->next_step() );
-			$cursor   = $importer->get_reentrancy_cursor();
-			$importer = StreamImporter::create_for_wxr_file( $wxr_path, [
+		$importer = StreamImporter::create_for_wxr_file(
+			$wxr_path,
+			array(
 				'new_site_content_root_url' => 'http://127.0.0.1:9400',
 				'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
 				'uploads_path' => sys_get_temp_dir() . '/uploads',
 				'entity_sink' => new class() {
-					public $imported_entities = [];
+					public $imported_entities = array();
 					public function import_entity( $entity ) {
 						$this->imported_entities[] = $entity;
 						return true;
 					}
 				},
-			], $cursor );
+			)
+		);
+		$this->skip_to_stage( $importer, StreamImporter::STAGE_IMPORT_ENTITIES );
+
+		for ( $i = 0; $i < 11; ++$i ) {
+			$this->assertTrue( $importer->next_step() );
+			$cursor   = $importer->get_reentrancy_cursor();
+			$importer = StreamImporter::create_for_wxr_file(
+				$wxr_path,
+				array(
+					'new_site_content_root_url' => 'http://127.0.0.1:9400',
+					'new_media_root_url' => 'http://127.0.0.1:9400/wp-content/uploads',
+					'uploads_path' => sys_get_temp_dir() . '/uploads',
+					'entity_sink' => new class() {
+						public $imported_entities = array();
+						public function import_entity( $entity ) {
+							$this->imported_entities[] = $entity;
+							return true;
+						}
+					},
+				),
+				$cursor
+			);
 			// Rewind back to the entity we were on.
 			// Note this means we may attempt to insert it twice. It's
 			// the importer's job to detect that and skip the duplicate

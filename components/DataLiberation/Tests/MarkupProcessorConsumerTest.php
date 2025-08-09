@@ -143,7 +143,7 @@ HTML
 
 		// $output_file = __DIR__ . '/fixtures/html-to-blocks/excerpt.output.html';
 		// if ( getenv( 'UPDATE_FIXTURES' ) ) {
-		// 	file_put_contents( $output_file, $blocks );
+		// file_put_contents( $output_file, $blocks );
 		// }
 
 		// $this->assertEquals( file_get_contents( $output_file ), $blocks );

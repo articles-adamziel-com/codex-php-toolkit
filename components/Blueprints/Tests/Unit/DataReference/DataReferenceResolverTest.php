@@ -62,10 +62,12 @@ class DataReferenceResolverTest extends TestCase {
 	}
 
 	public function testResolveInlineFile() {
-		$reference = new InlineFile( [
-			'filename' => 'baz.txt',
-			'content' => 'hello world'
-		] );
+		$reference = new InlineFile(
+			array(
+				'filename' => 'baz.txt',
+				'content' => 'hello world',
+			)
+		);
 		$result    = $this->resolver->resolve( $reference );
 		$this->assertInstanceOf( File::class, $result );
 		$this->assertEquals( 'baz.txt', $result->filename );
@@ -75,12 +77,14 @@ class DataReferenceResolverTest extends TestCase {
 	}
 
 	public function testResolveInlineDirectory() {
-		$reference = new InlineDirectory( [
-			'directoryName' => 'dir',
-			'files' => [
-				'child.txt' => 'child content'
-			]
-		] );
+		$reference = new InlineDirectory(
+			array(
+				'directoryName' => 'dir',
+				'files' => array(
+					'child.txt' => 'child content',
+				),
+			)
+		);
 		$result    = $this->resolver->resolve( $reference );
 		$this->assertInstanceOf( Directory::class, $result );
 		$fs = $result->filesystem;
@@ -97,11 +101,13 @@ class DataReferenceResolverTest extends TestCase {
 	public function testResolveGitPath() {
 		// This test will be limited, as GitRepository and GitFilesystem are not easily mockable here.
 		// We'll just check that Directory is returned and the dirname is as expected.
-		$reference = new GitPath( [
-			'gitRepository' => 'https://github.com/WordPress/wordpress-playground.git',
-			'ref' => 'refs/heads/trunk',
-			'path' => 'tools/scripts'
-		] );
+		$reference = new GitPath(
+			array(
+				'gitRepository' => 'https://github.com/WordPress/wordpress-playground.git',
+				'ref' => 'refs/heads/trunk',
+				'path' => 'tools/scripts',
+			)
+		);
 		$result    = $this->resolver->resolve( $reference );
 		$this->assertInstanceOf( Directory::class, $result );
 		$this->assertEquals( 'scripts', $result->dirname );
@@ -120,5 +126,4 @@ class DataReferenceResolverTest extends TestCase {
 		$this->expectException( Exception::class );
 		$this->resolver->resolve( $reference );
 	}
-
 }

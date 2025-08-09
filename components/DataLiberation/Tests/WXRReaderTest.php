@@ -19,7 +19,7 @@ class WXRReaderTest extends TestCase {
 
 		$found_entities = 0;
 		while ( $wxr->next_entity() ) {
-			++ $found_entities;
+			++$found_entities;
 		}
 
 		$this->assertEquals( $expected_entitys, $found_entities );
@@ -40,7 +40,7 @@ class WXRReaderTest extends TestCase {
 
 			$wxr->append_bytes( $chunk );
 			while ( true === $wxr->next_entity() ) {
-				++ $found_entities;
+				++$found_entities;
 			}
 		}
 		$this->assertNull( $wxr->get_xml_exception() );
@@ -287,9 +287,11 @@ XML
 	public function test_stylish_press_wxr_remote() {
 		$importer = WXREntityReader::create();
 		$importer->connect_upstream(
-			new RequestReadStream(new Request(
-				'https://raw.githubusercontent.com/wordpress/blueprints/trunk/blueprints/stylish-press/site-content.wxr'
-			))
+			new RequestReadStream(
+				new Request(
+					'https://raw.githubusercontent.com/wordpress/blueprints/trunk/blueprints/stylish-press/site-content.wxr'
+				)
+			)
 		);
 		$this->assert_stylish_press_wxr( $importer );
 	}
@@ -297,41 +299,53 @@ XML
 	private function assert_stylish_press_wxr( $importer ) {
 		$this->assertTrue( $importer->next_entity() );
 		$this->assert_entity_equals(
-			new ImportEntity( 'site_option', array(
-				'option_name'  => 'blogname',
-				'option_value' => 'Stylish Press',
-			) ),
+			new ImportEntity(
+				'site_option',
+				array(
+					'option_name'  => 'blogname',
+					'option_value' => 'Stylish Press',
+				)
+			),
 			$importer->get_entity()
 		);
 
 		$this->assertTrue( $importer->next_entity() );
 		$this->assert_entity_equals(
-			new ImportEntity( 'site_option', array(
-				'option_name'  => 'siteurl',
-				'option_value' => 'http://www.stylishpress.wordpress.org'
-			) ),
+			new ImportEntity(
+				'site_option',
+				array(
+					'option_name'  => 'siteurl',
+					'option_value' => 'http://www.stylishpress.wordpress.org',
+				)
+			),
 			$importer->get_entity()
 		);
 
 		$this->assertTrue( $importer->next_entity() );
 		$this->assert_entity_equals(
-			new ImportEntity( 'site_option', array(
-				'option_name'  => 'home',
-				'option_value' => 'http://www.stylishpress.wordpress.org'
-			) ),
+			new ImportEntity(
+				'site_option',
+				array(
+					'option_name'  => 'home',
+					'option_value' => 'http://www.stylishpress.wordpress.org',
+				)
+			),
 			$importer->get_entity()
 		);
 
 		$this->assertTrue( $importer->next_entity() );
 		$this->assert_entity_equals(
-			new ImportEntity( 'user', array(
-				'ID'           => 1,
-				'user_login'   => 'admin',
-				'user_email'   => 'admin@stylishpress.wordpress.org',
-				'display_name' => 'Admin',
-				'first_name'   => 'John',
-				'last_name'    => 'Doe',
-			) ),
+			new ImportEntity(
+				'user',
+				array(
+					'ID'           => 1,
+					'user_login'   => 'admin',
+					'user_email'   => 'admin@stylishpress.wordpress.org',
+					'display_name' => 'Admin',
+					'first_name'   => 'John',
+					'last_name'    => 'Doe',
+				)
+			),
 			$importer->get_entity()
 		);
 
@@ -346,11 +360,14 @@ XML
 
 		$this->assertTrue( $importer->next_entity() );
 		$this->assert_entity_equals(
-			new ImportEntity( 'post_meta', array(
-				'meta_key'   => '_edit_last',
-				'meta_value' => '1',
-				'post_id' => 1
-			) ),
+			new ImportEntity(
+				'post_meta',
+				array(
+					'meta_key'   => '_edit_last',
+					'meta_value' => '1',
+					'post_id' => 1,
+				)
+			),
 			$importer->get_entity()
 		);
 
@@ -698,7 +715,7 @@ XML
 			FileReadStream::from_path( $xml_path )
 		);
 
-		for ( $i = 0; $i < 11; $i ++ ) {
+		for ( $i = 0; $i < 11; $i++ ) {
 			$this->assertTrue( $wxr->next_entity() );
 			$this->assertEquals(
 				$expected_entities[ $i ],
@@ -728,7 +745,7 @@ XML
 			FileReadStream::from_path( $xml_path )
 		);
 
-		for ( $i = 0; $i < 11; $i ++ ) {
+		for ( $i = 0; $i < 11; $i++ ) {
 			$this->assertTrue( $wxr->next_entity() );
 			$this->assertEquals(
 				$expected_entities[ $i ],

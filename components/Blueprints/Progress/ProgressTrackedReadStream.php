@@ -123,5 +123,4 @@ class ProgressTrackedReadStream implements ByteReadStream {
 			$this->tracker->set( $progress );
 		}
 	}
-
 }

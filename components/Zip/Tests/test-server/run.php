@@ -31,31 +31,35 @@ if ( isset( $argv ) && is_array( $argv ) ) {
 }
 
 $server = new TcpServer( $host, $port );
-$server->set_handler( function ( IncomingRequest $request, TcpResponseWriteStream $response ) use ( $document_root ) {
-	$pathname = $request->get_parsed_url()->pathname;
+$server->set_handler(
+	function ( IncomingRequest $request, TcpResponseWriteStream $response ) use ( $document_root ) {
+		$pathname = $request->get_parsed_url()->pathname;
 
-	$file_path = wp_join_unix_paths( $document_root, $pathname );
-	if ( ! file_exists( $file_path ) || ! is_file( $file_path ) ) {
-		$response->send_http_code( 404 );
-		$response->send_header( 'Content-Type', 'text/plain' );
-		$response->append_bytes( "Path $pathname not found" );
+		$file_path = wp_join_unix_paths( $document_root, $pathname );
+		if ( ! file_exists( $file_path ) || ! is_file( $file_path ) ) {
+				$response->send_http_code( 404 );
+				$response->send_header( 'Content-Type', 'text/plain' );
+				$response->append_bytes( "Path $pathname not found" );
 
-		return;
+				return;
+		}
+
+		$response->send_http_code( 200 );
+		$response->send_header( 'Content-Type', 'application/octet-stream' );
+
+		$parsed_url = $request->get_parsed_url();
+		if ( $parsed_url->searchParams->get( 'chunked' ) === 'yes' ) {
+			$response->use_chunked_encoding();
+		} else {
+			$response->send_header( 'Content-Length', filesize( $file_path ) );
+		}
+		$file_stream = FileReadStream::from_path( $file_path );
+		pipe_stream( $file_stream, $response );
 	}
+);
 
-	$response->send_http_code( 200 );
-	$response->send_header( 'Content-Type', 'application/octet-stream' );
-
-	$parsed_url = $request->get_parsed_url();
-	if ( $parsed_url->searchParams->get( 'chunked' ) === 'yes' ) {
-		$response->use_chunked_encoding();
-	} else {
-		$response->send_header( 'Content-Length', filesize( $file_path ) );
+$server->serve(
+	function ( $host, $port ) {
+		echo "Server started on http://{$host}:{$port}\n";
 	}
-	$file_stream = FileReadStream::from_path( $file_path );
-	pipe_stream( $file_stream, $response );
-} );
-
-$server->serve( function ( $host, $port ) {
-	echo "Server started on http://{$host}:{$port}\n";
-} );
+);

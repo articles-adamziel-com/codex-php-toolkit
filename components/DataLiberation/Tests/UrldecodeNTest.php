@@ -21,12 +21,12 @@ class UrldecodeNTest extends TestCase {
 
 	public static function provider_test_urldecode_n() {
 		return array(
-			'Encoded path segment with no encoded bytes later on'                => array(
+			'Encoded path segment with no encoded bytes later on' => array(
 				'original_string' => '/%73/%63/image.png',
 				'decode_length'   => 4,
 				'expected_string' => '/s/c/image.png',
 			),
-			'Encoded path segment with encoded bytes later on'                   => array(
+			'Encoded path segment with encoded bytes later on' => array(
 				'original_string' => '/%73/%63/%73%63ience.png',
 				'decode_length'   => 4,
 				'expected_string' => '/s/c/%73%63ience.png',

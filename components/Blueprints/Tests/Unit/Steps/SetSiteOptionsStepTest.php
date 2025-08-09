@@ -27,9 +27,9 @@ $result[$name] = $actual_value;
 append_output( json_encode($result) );
 PHP
 			,
-			[
+			array(
 				'OPTIONS' => json_encode( $expected_options ),
-			]
+			)
 		)->outputFileContent;
 
 		$actual_options = json_decode( $result, true );
@@ -59,11 +59,11 @@ PHP
 	 * Test setting simple string options
 	 */
 	public function testSetSimpleStringOptions() {
-		$options = [
+		$options = array(
 			'blogname'        => 'Test Blog',
 			'blogdescription' => 'Test Description',
 			'admin_email'     => 'test@example.com',
-		];
+		);
 
 		$step    = new SetSiteOptionsStep( $options );
 		$tracker = new Tracker();
@@ -77,18 +77,18 @@ PHP
 	 * Test setting options with different data types
 	 */
 	public function testSetOptionsWithDifferentTypes() {
-		$options = [
+		$options = array(
 			'string_option' => 'String Value',
 			'int_option'    => 42,
 			'bool_option'   => true,
-			'array_option'  => [ 'one', 'two', 'three' ],
-			'object_option' => (object) [ 'key' => 'value' ],
-			'nested_option' => [
-				'level1' => [
+			'array_option'  => array( 'one', 'two', 'three' ),
+			'object_option' => (object) array( 'key' => 'value' ),
+			'nested_option' => array(
+				'level1' => array(
 					'level2' => 'nested value',
-				],
-			],
-		];
+				),
+			),
+		);
 
 		$step    = new SetSiteOptionsStep( $options );
 		$tracker = new Tracker();
@@ -110,14 +110,13 @@ require_once getenv('DOCROOT') . '/wp-load.php';
 update_option('users_can_register', 0);
 update_option('default_role', 'subscriber');
 PHP
-
 		)->outputFileContent;
 
 		// Now update them
-		$options = [
+		$options = array(
 			'users_can_register' => 1,
 			'default_role'       => 'author',
-		];
+		);
 
 		$step    = new SetSiteOptionsStep( $options );
 		$tracker = new Tracker();
@@ -132,9 +131,9 @@ PHP
 	 */
 	public function testSetLargeNumberOfOptions() {
 		// Create a large number of options
-		$options = [];
-		for ( $i = 1; $i <= 50; $i ++ ) {
-			$options["test_option_$i"] = "value_$i";
+		$options = array();
+		for ( $i = 1; $i <= 50; $i++ ) {
+			$options[ "test_option_$i" ] = "value_$i";
 		}
 
 		$step    = new SetSiteOptionsStep( $options );
@@ -142,12 +141,12 @@ PHP
 		$step->run( $this->runtime, $tracker );
 
 		// Verify a sample of the options
-		$sample_options = [
+		$sample_options = array(
 			'test_option_1'  => 'value_1',
 			'test_option_10' => 'value_10',
 			'test_option_25' => 'value_25',
 			'test_option_50' => 'value_50',
-		];
+		);
 
 		$this->assertWordPressOptions( $sample_options );
 	}
@@ -156,7 +155,7 @@ PHP
 	 * Test setting WordPress core settings
 	 */
 	public function testSetWordPressCoreSettings() {
-		$options = [
+		$options = array(
 			'permalink_structure' => '/%year%/%monthnum%/%postname%/',
 			'timezone_string'     => 'America/New_York',
 			'date_format'         => 'F j, Y',
@@ -165,7 +164,7 @@ PHP
 			'show_on_front'       => 'page',
 			'page_on_front'       => 2,
 			'page_for_posts'      => 3,
-		];
+		);
 
 		$step    = new SetSiteOptionsStep( $options );
 		$tracker = new Tracker();
@@ -180,20 +179,20 @@ PHP
 	 */
 	public function testSetSerializedOptions() {
 		// Create a complex nested structure that will be serialized
-		$options = [
-			'complex_option' => [
+		$options = array(
+			'complex_option' => array(
 				'setting1' => 'value1',
-				'setting2' => [
+				'setting2' => array(
 					'nested1' => true,
 					'nested2' => 42,
-					'nested3' => [ 'a', 'b', 'c' ],
-				],
-				'setting3' => (object) [
+					'nested3' => array( 'a', 'b', 'c' ),
+				),
+				'setting3' => (object) array(
 					'prop1' => 'object property',
-					'prop2' => [ 'x', 'y', 'z' ],
-				],
-			],
-		];
+					'prop2' => array( 'x', 'y', 'z' ),
+				),
+			),
+		);
 
 		$step    = new SetSiteOptionsStep( $options );
 		$tracker = new Tracker();

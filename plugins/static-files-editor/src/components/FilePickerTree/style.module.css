@@ -31,12 +31,12 @@
 }
 
 .more-actions {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0;
-    max-height: 100%;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	opacity: 0;
+	max-height: 100%;
 }
 
 .filename-form {

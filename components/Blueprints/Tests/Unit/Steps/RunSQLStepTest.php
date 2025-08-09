@@ -12,12 +12,17 @@ class RunSQLStepTest extends StepTestCase {
 	 * Test running a simple SQL query
 	 */
 	public function testRunSimpleSQLQuery() {
-		$sql = "CREATE TABLE IF NOT EXISTS test_table (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100));";
+		$sql = 'CREATE TABLE IF NOT EXISTS test_table (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100));';
 		$this->execution_context->put_contents( 'test.sql', $sql );
 
-		$step = new RunSqlStep( DataReference::create( './test.sql', [
-			ExecutionContextPath::class
-		] ) );
+		$step = new RunSqlStep(
+			DataReference::create(
+				'./test.sql',
+				array(
+					ExecutionContextPath::class,
+				)
+			)
+		);
 		$step->run( $this->runtime, new Tracker() );
 
 		$table_exists = $this->runtime->evalPhpCodeInSubProcess(
@@ -29,7 +34,6 @@ $table_name = 'test_table';
 $result = $wpdb->get_var("SHOW TABLES LIKE '$table_name'");
 append_output( ($result === $table_name) ? 'true' : 'false' );
 PHP
-
 		)->outputFileContent;
 
 		$this->assertEquals( 'true', $table_exists );
@@ -47,9 +51,14 @@ INSERT INTO test_table (name) VALUES ('Test 3');
 SQL;
 		$this->execution_context->put_contents( 'test.sql', $sql );
 
-		$step = new RunSqlStep( DataReference::create( './test.sql', [
-			ExecutionContextPath::class
-		] ) );
+		$step = new RunSqlStep(
+			DataReference::create(
+				'./test.sql',
+				array(
+					ExecutionContextPath::class,
+				)
+			)
+		);
 		$step->run( $this->runtime, new Tracker() );
 
 		$result = $this->runtime->evalPhpCodeInSubProcess(
@@ -64,7 +73,6 @@ append_output( json_encode([
 'rows' => $rows
 ]) );
 PHP
-
 		)->outputFileContent;
 
 		$data = json_decode( $result, true );
@@ -84,9 +92,14 @@ UPDATE wp_options SET option_value = 'updated_via_sql' WHERE option_name = 'sql_
 SQL;
 		$this->execution_context->put_contents( 'test.sql', $sql );
 
-		$step = new RunSqlStep( DataReference::create( './test.sql', [
-			ExecutionContextPath::class
-		] ) );
+		$step = new RunSqlStep(
+			DataReference::create(
+				'./test.sql',
+				array(
+					ExecutionContextPath::class,
+				)
+			)
+		);
 		$step->run( $this->runtime, new Tracker() );
 
 		$option_value = $this->runtime->evalPhpCodeInSubProcess(
@@ -95,7 +108,6 @@ SQL;
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( get_option('sql_test_option') );
 PHP
-
 		)->outputFileContent;
 
 		$this->assertEquals( 'updated_via_sql', $option_value );
@@ -113,9 +125,14 @@ INSERT INTO test_table_2 (value) VALUES ('table_2_data');
 SQL;
 		$this->execution_context->put_contents( 'test.sql', $sql );
 
-		$step = new RunSqlStep( DataReference::create( './test.sql', [
-			ExecutionContextPath::class
-		] ) );
+		$step = new RunSqlStep(
+			DataReference::create(
+				'./test.sql',
+				array(
+					ExecutionContextPath::class,
+				)
+			)
+		);
 		$step->run( $this->runtime, new Tracker() );
 
 		$result = $this->runtime->evalPhpCodeInSubProcess(
@@ -132,7 +149,6 @@ append_output( json_encode([
 'table2' => $table2_data
 ]) );
 PHP
-
 		)->outputFileContent;
 
 		$data = json_decode( $result, true );
@@ -144,12 +160,17 @@ PHP
 	 * Test handling SQL errors
 	 */
 	public function testHandleSQLErrors() {
-		$sql = "CREATE TABLE test_table (id INT PRIMARY KEY); INSERT INTO nonexistent_table VALUES (1);";
+		$sql = 'CREATE TABLE test_table (id INT PRIMARY KEY); INSERT INTO nonexistent_table VALUES (1);';
 		$this->execution_context->put_contents( 'test.sql', $sql );
 
-		$step = new RunSqlStep( DataReference::create( './test.sql', [
-			ExecutionContextPath::class
-		] ) );
+		$step = new RunSqlStep(
+			DataReference::create(
+				'./test.sql',
+				array(
+					ExecutionContextPath::class,
+				)
+			)
+		);
 		$step->run( $this->runtime, new Tracker() );
 
 		$table_exists = $this->runtime->evalPhpCodeInSubProcess(
@@ -161,7 +182,6 @@ $table_name = 'test_table';
 $result = $wpdb->get_var("SHOW TABLES LIKE '$table_name'");
 append_output( ($result === $table_name) ? 'true' : 'false' );
 PHP
-
 		)->outputFileContent;
 
 		$this->assertEquals( 'true', $table_exists );

@@ -23,7 +23,7 @@ PHP
 	}
 
 	public function testEnableMultisite() {
-		$step = new EnableMultisiteStep();
+		$step    = new EnableMultisiteStep();
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );
 
@@ -82,7 +82,7 @@ PHP
 
 
 	public function testEnableMultisiteRedirectsWhenSiteNotFound() {
-		$step = new EnableMultisiteStep();
+		$step    = new EnableMultisiteStep();
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );
 
@@ -123,13 +123,13 @@ PHP
 
 		$this->expectException( BlueprintExecutionException::class );
 		$this->expectExceptionMessage( 'The current host is "localhost:8080", but WordPress multisites do not support custom ports.' );
-		$step = new EnableMultisiteStep();
+		$step    = new EnableMultisiteStep();
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );
 	}
 
 	public function testEnableMultisiteFailsWhenAlreadyEnabled() {
-		$step = new EnableMultisiteStep();
+		$step    = new EnableMultisiteStep();
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );
 
@@ -149,7 +149,7 @@ PHP
 
 		$this->expectException( BlueprintExecutionException::class );
 		$this->expectExceptionMessage( 'Failed to enable multisite' );
-		$step = new EnableMultisiteStep();
+		$step    = new EnableMultisiteStep();
 		$tracker = new Tracker();
 		$step->run( $this->runtime, $tracker );
 	}

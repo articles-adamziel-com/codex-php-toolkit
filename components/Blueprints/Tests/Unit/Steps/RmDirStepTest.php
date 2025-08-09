@@ -14,7 +14,7 @@ class RmDirStepTest extends StepTestCase {
 
 		$step = new RmDirStep(
 			'empty_dir',
-			[ 'recursive' => false ]
+			array( 'recursive' => false )
 		);
 
 		$tracker = new Tracker();
@@ -28,13 +28,13 @@ class RmDirStepTest extends StepTestCase {
 
 	public function testRemoveDirectoryWithRecursiveOption() {
 		$fs = $this->runtime->getTargetFilesystem();
-		$fs->mkdir( 'parent/child', [ 'recursive' => true ] );
+		$fs->mkdir( 'parent/child', array( 'recursive' => true ) );
 		$fs->put_contents( 'parent/file.txt', 'test content' );
 		$fs->put_contents( 'parent/child/nested_file.txt', 'nested content' );
 
 		$step = new RmDirStep(
 			'parent',
-			[ 'recursive' => true ]
+			array( 'recursive' => true )
 		);
 
 		$tracker = new Tracker();
@@ -53,7 +53,7 @@ class RmDirStepTest extends StepTestCase {
 
 		$step = new RmDirStep(
 			'non_empty_dir',
-			[ 'recursive' => false ]
+			array( 'recursive' => false )
 		);
 
 		$tracker = new Tracker();
@@ -63,8 +63,8 @@ class RmDirStepTest extends StepTestCase {
 
 	public function testRemoveDirectoryWithMultipleFilesAndNestedDirectories() {
 		$fs = $this->runtime->getTargetFilesystem();
-		$fs->mkdir( 'complex/nested1/sub1', [ 'recursive' => true ] );
-		$fs->mkdir( 'complex/nested2', [ 'recursive' => true ] );
+		$fs->mkdir( 'complex/nested1/sub1', array( 'recursive' => true ) );
+		$fs->mkdir( 'complex/nested2', array( 'recursive' => true ) );
 		$fs->put_contents( 'complex/file1.txt', 'content 1' );
 		$fs->put_contents( 'complex/file2.txt', 'content 2' );
 		$fs->put_contents( 'complex/nested1/file3.txt', 'content 3' );
@@ -73,7 +73,7 @@ class RmDirStepTest extends StepTestCase {
 
 		$step = new RmDirStep(
 			'complex',
-			[ 'recursive' => true ]
+			array( 'recursive' => true )
 		);
 
 		$tracker = new Tracker();
@@ -88,7 +88,7 @@ class RmDirStepTest extends StepTestCase {
 	public function testRemoveNonExistentDirectoryFails() {
 		$step = new RmDirStep(
 			'nonexistent_dir',
-			[ 'recursive' => false ]
+			array( 'recursive' => false )
 		);
 
 		$tracker = new Tracker();
@@ -102,7 +102,7 @@ class RmDirStepTest extends StepTestCase {
 
 		$step = new RmDirStep(
 			'test_file.txt',
-			[ 'recursive' => false ]
+			array( 'recursive' => false )
 		);
 
 		$tracker = new Tracker();

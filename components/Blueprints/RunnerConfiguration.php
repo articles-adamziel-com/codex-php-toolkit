@@ -12,9 +12,9 @@ class RunnerConfiguration {
 	public const PERMISSION_LOCAL_FILESYSTEM_ACCESS = 'read-local-fs';
 
 	// Array of all available permissions
-	public const ALL_PERMISSIONS = [
+	public const ALL_PERMISSIONS = array(
 		self::PERMISSION_LOCAL_FILESYSTEM_ACCESS,
-	];
+	);
 
 	/**
 	 * @var DataReference|mixed[]
@@ -39,8 +39,8 @@ class RunnerConfiguration {
 	/**
 	 * @var mixed[]
 	 */
-	private $databaseCredentials = [];
-	private $progressObserver = null;
+	private $databaseCredentials = array();
+	private $progressObserver    = null;
 	/**
 	 * @var LoggerInterface
 	 */
@@ -59,13 +59,13 @@ class RunnerConfiguration {
 	public function __construct() {
 		$this->sqliteIntegrationPlugin = DataReference::create( 'https://downloads.wordpress.org/plugin/sqlite-database-integration.zip' );
 		$this->logger                  = new NoopLogger();
-		$this->permissions             = [
+		$this->permissions             = array(
 			self::PERMISSION_LOCAL_FILESYSTEM_ACCESS => false,
-		];
+		);
 	}
 
 	/**
-	 * @param  DataReference|mixed[]  $r
+	 * @param  DataReference|mixed[] $r
 	 */
 	public function setBlueprint( $r ): self {
 		$this->blueprintRef = $r;
@@ -123,13 +123,13 @@ class RunnerConfiguration {
 	/**
 	 * Sets the database engine.
 	 *
-	 * @param  string  $databaseEngine  Database engine to use ('mysql' or 'sqlite')
+	 * @param  string $databaseEngine  Database engine to use ('mysql' or 'sqlite')
 	 *
 	 * @return self
 	 * @throws InvalidArgumentException If the database engine is invalid
 	 */
 	public function setDatabaseEngine( string $databaseEngine ): self {
-		if ( ! in_array( $databaseEngine, [ 'mysql', 'sqlite' ] ) ) {
+		if ( ! in_array( $databaseEngine, array( 'mysql', 'sqlite' ) ) ) {
 			throw new InvalidArgumentException( "Invalid database engine: {$databaseEngine}" );
 		}
 
@@ -145,7 +145,7 @@ class RunnerConfiguration {
 	/**
 	 * Sets the database credentials.
 	 *
-	 * @param  array  $databaseCredentials  Connection parameters for the database
+	 * @param  array $databaseCredentials  Connection parameters for the database
 	 *
 	 * @return self
 	 */
@@ -162,7 +162,7 @@ class RunnerConfiguration {
 	/**
 	 * Sets a callback function to be called to report progress during execution.
 	 *
-	 * @param  callable|null  $callback  A function that accepts progress information
+	 * @param  callable|null $callback  A function that accepts progress information
 	 *
 	 * @return self
 	 */
@@ -184,7 +184,7 @@ class RunnerConfiguration {
 	/**
 	 * Set a custom DataReference for the sqlite-database-integration plugin.
 	 *
-	 * @param  DataReference  $ref
+	 * @param  DataReference $ref
 	 *
 	 * @return self
 	 */
@@ -206,7 +206,7 @@ class RunnerConfiguration {
 	/**
 	 * Enables the runner to source the execution context files from the local filesystem.
 	 *
-	 * @param  bool  $allow  True to allow filesystem access, false to deny.
+	 * @param  bool $allow  True to allow filesystem access, false to deny.
 	 *
 	 * @return self
 	 */
@@ -228,7 +228,7 @@ class RunnerConfiguration {
 	/**
 	 * Gets the CLI flag that corresponds to a permission constant.
 	 *
-	 * @param  string  $permission  One of the PERMISSION_* constants
+	 * @param  string $permission  One of the PERMISSION_* constants
 	 *
 	 * @return string The CLI flag name
 	 */
@@ -237,6 +237,6 @@ class RunnerConfiguration {
 	}
 
 	public function isRunningAsPhar(): bool {
-		return \Phar::running(false) !== '';
+		return \Phar::running( false ) !== '';
 	}
 }

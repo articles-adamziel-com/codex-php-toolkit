@@ -31,9 +31,12 @@ class UnzipStepTest extends StepTestCase {
 
 	public function testUnzipFile() {
 		$step = new UnzipStep(
-			DataReference::create( './test_zip.zip', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./test_zip.zip',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			'extract_dir'
 		);
 
@@ -53,12 +56,15 @@ class UnzipStepTest extends StepTestCase {
 	public function testUnzipToExistingDirectory() {
 		// Create the target directory first
 		$fs = $this->runtime->getTargetFilesystem();
-		$fs->mkdir( 'existing_dir', [ 'recursive' => true ] );
+		$fs->mkdir( 'existing_dir', array( 'recursive' => true ) );
 
 		$step = new UnzipStep(
-			DataReference::create( './test_zip.zip', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./test_zip.zip',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			'existing_dir'
 		);
 
@@ -80,9 +86,12 @@ class UnzipStepTest extends StepTestCase {
 		}
 
 		$step = new UnzipStep(
-			DataReference::create( './nested_test.zip', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./nested_test.zip',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			'nested_extract'
 		);
 

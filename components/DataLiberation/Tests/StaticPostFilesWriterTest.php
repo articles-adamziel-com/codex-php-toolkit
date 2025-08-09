@@ -196,10 +196,14 @@ class StaticPostFilesWriterTest extends TestCase {
 		$this->assertStringContainsString( 'Content 1', $this->filesystem->get_contents( '/post-1/index.' . $file_extension ) );
 		$this->assertStringContainsString( 'Content 2', $this->filesystem->get_contents( '/post-1/post-2/index.' . $file_extension ) );
 		$this->assertStringContainsString( 'Content 3', $this->filesystem->get_contents( '/post-1/post-2/post-3.' . $file_extension ) );
-		$this->assertStringContainsString( 'Content 5',
-			$this->filesystem->get_contents( '/post-1/post-2/post-4/post-5.' . $file_extension ) );
-		$this->assertStringContainsString( 'Content 6',
-			$this->filesystem->get_contents( '/post-1/post-2/post-4/post-6.' . $file_extension ) );
+		$this->assertStringContainsString(
+			'Content 5',
+			$this->filesystem->get_contents( '/post-1/post-2/post-4/post-5.' . $file_extension )
+		);
+		$this->assertStringContainsString(
+			'Content 6',
+			$this->filesystem->get_contents( '/post-1/post-2/post-4/post-6.' . $file_extension )
+		);
 		$this->assertStringContainsString( 'Content 7', $this->filesystem->get_contents( '/post-7.' . $file_extension ) );
 	}
 

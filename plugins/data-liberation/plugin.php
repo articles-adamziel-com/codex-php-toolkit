@@ -19,8 +19,8 @@ use WordPress\DataLiberation\Importer\StreamImporter;
 use WordPress\HttpClient\Request;
 use WordPress\Markdown\MarkdownImporter;
 
-if(file_exists(__DIR__ . '/php-toolkit.phar')) {
-    // Production – built and installed plugin
+if ( file_exists( __DIR__ . '/php-toolkit.phar' ) ) {
+	// Production – built and installed plugin
 	require_once __DIR__ . '/php-toolkit.phar';
 } else {
 	// Development – plugin mounted in WordPress via Playground CLI mounts
@@ -30,7 +30,6 @@ if(file_exists(__DIR__ . '/php-toolkit.phar')) {
 
 /**
  * Don't run KSES on the attribute values during the import.
- *
  *
  * Without this filter, WP_HTML_Tag_Processor::set_attribute() will
  * assume the value is a URL and run KSES on it, which will incorrectly
@@ -120,17 +119,20 @@ add_action(
  * to the remote server via the CORS proxy. This is useful for cloning private
  * Git repositories.
  */
-add_filter('wp_http_client_request', function (Request $request) {
-    if(isset($request->headers['x-cors-proxy-allowed-request-headers'])) {
-        $prefix = $request->headers['x-cors-proxy-allowed-request-headers'] . ',';
-    } else {
-        $prefix = '';
-    }
-    if(str_contains($request->url, '.git/')) {
-        $request->headers['x-cors-proxy-allowed-request-headers'] = $prefix . 'Authorization';
-    }
-	return $request;
-});
+add_filter(
+	'wp_http_client_request',
+	function ( Request $request ) {
+		if ( isset( $request->headers['x-cors-proxy-allowed-request-headers'] ) ) {
+			$prefix = $request->headers['x-cors-proxy-allowed-request-headers'] . ',';
+		} else {
+			$prefix = '';
+		}
+		if ( str_contains( $request->url, '.git/' ) ) {
+			$request->headers['x-cors-proxy-allowed-request-headers'] = $prefix . 'Authorization';
+		}
+		return $request;
+	}
+);
 
 // Register admin menu
 add_action(
@@ -360,7 +362,7 @@ add_action(
 
 		if ( false === $import_session ) {
 			// @TODO: More user friendly error message – maybe redirect back to the import screen and
-			//        show the error there.
+			// show the error there.
 			wp_die( 'Failed to create an import session' );
 		}
 
@@ -371,10 +373,10 @@ add_action(
 		 * @TODO: The schedule doesn't seem to be actually running.
 		 */
 		// if(is_wp_error(wp_schedule_event(time(), 'data_liberation_minute', 'data_liberation_process_import'))) {
-		//     wp_delete_attachment($attachment_id, true);
-		//     // @TODO: More user friendly error message – maybe redirect back to the import screen and
-		//     //        show the error there.
-		//     wp_die('Failed to schedule import – the "data_liberation_minute" schedule may not be registered.');
+		// wp_delete_attachment($attachment_id, true);
+		// @TODO: More user friendly error message – maybe redirect back to the import screen and
+		// show the error there.
+		// wp_die('Failed to schedule import – the "data_liberation_minute" schedule may not be registered.');
 		// }
 
 		wp_redirect(
@@ -405,9 +407,9 @@ add_action( 'data_liberation_process_import', 'data_liberation_process_import' )
 
 function data_liberation_import_step( $session, $importer = null ) {
 	$metadata = $session->get_metadata();
-    if(!$importer) {
-        $importer = data_liberation_create_importer( $metadata );
-    }
+	if ( ! $importer ) {
+		$importer = data_liberation_create_importer( $metadata );
+	}
 	if ( ! $importer ) {
 		return;
 	}
@@ -439,7 +441,7 @@ function data_liberation_import_step( $session, $importer = null ) {
 			// No negotiation, we're done.
 			// @TODO: Make it easily configurable
 			// @TODO: Bump the number of download attempts for the placeholders,
-			//        set the status to `error` in each interrupted download.
+			// set the status to `error` in each interrupted download.
 			break;
 		}
 
@@ -583,7 +585,7 @@ function data_liberation_get_interactivity_state() {
 		);
 	}
 
-	$frontloading_progress     = array_map(
+	$frontloading_progress = array_map(
 		function ( $progress, $url ) {
 			$progress['url'] = $url;
 			return $progress;
@@ -591,7 +593,7 @@ function data_liberation_get_interactivity_state() {
 		$import_session ? $import_session->get_frontloading_progress() : array(),
 		array_keys( $import_session ? $import_session->get_frontloading_progress() : array() )
 	);
-	$frontloading_stubs = $import_session ? $import_session->get_frontloading_stubs() : array();
+	$frontloading_stubs    = $import_session ? $import_session->get_frontloading_stubs() : array();
 	return array(
 		// Current import state:
 		'currentImport' => $import_session

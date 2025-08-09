@@ -14,9 +14,12 @@ $post_id = wp_insert_post(
 		'post_type'  => 'wp_template_part',
 		'post_title' => '" + checkbox.dataset.post_title.replace( /' / g,
 		"\\'",
-	) + "', 'post_name' => '" + checkbox . dataset . post_name . replace( /'/g, "\\'" ) + "', 'post_content' => '" + checkbox.dataset.post_content.replace( /'/g, "\\'" ).replace( /\\n/g, "\n" ) + "', 'post_status' => 'publish' )
+	) + "', 'post_name' => '" + checkbox . dataset . post_name . replace( / '/g, "\\'" ) + "', 'post_content' => '" + checkbox.dataset.post_content.replace( /'/g, "\\'" ).replace( /\\n/g, "\n" ) + "', 'post_status' => 'publish' )
 );
 
-wp_set_object_terms( $post_id,
-	$term_id, 'wp_theme' );",
+wp_set_object_terms(
+	$post_id,
+	$term_id,
+	'wp_theme'
+);",
 } );

@@ -59,35 +59,40 @@ class ZipFilesystemTest extends TestCase {
 	 * @dataProvider chunkedEncodingProvider
 	 */
 	public function testReadRemoteZip( $chunked ) {
-		$this->withServer( function ( $url ) use ( $chunked ) {
-			$zip = ZipFilesystem::create(
-				new SeekableRequestReadStream(
-					"$url/childrens-literature.zip?chunked=$chunked",
-					[ 'client' => new Client() ]
-				)
-			);
-			$this->assertEquals(
-				[ 'mimetype', 'EPUB', 'META-INF' ],
-				$zip->ls()
-			);
-		} );
+		$this->withServer(
+			function ( $url ) use ( $chunked ) {
+				$zip = ZipFilesystem::create(
+					new SeekableRequestReadStream(
+						"$url/childrens-literature.zip?chunked=$chunked",
+						array( 'client' => new Client() )
+					)
+				);
+				$this->assertEquals(
+					array( 'mimetype', 'EPUB', 'META-INF' ),
+					$zip->ls()
+				);
+			}
+		);
 	}
 
 	static function chunkedEncodingProvider() {
-		return [
-			[ 'yes' ],
-			[ 'no' ],
-		];
+		return array(
+			array( 'yes' ),
+			array( 'no' ),
+		);
 	}
 
 	private function withServer( callable $callback, $host = '127.0.0.1', $port = 8940 ) {
 		$test_server_root = wp_join_unix_paths( __DIR__, 'test-server' );
-		$server           = new Process( [
-			'php',
-			wp_join_unix_paths( $test_server_root, 'run.php' ),
-			$host,
-			$port,
-		], $test_server_root );
+		$server           = new Process(
+			array(
+				'php',
+				wp_join_unix_paths( $test_server_root, 'run.php' ),
+				$host,
+				$port,
+			),
+			$test_server_root
+		);
 		$server->start();
 		try {
 			$attempts = 0;
@@ -97,7 +102,7 @@ class ZipFilesystemTest extends TestCase {
 					break;
 				}
 				usleep( 40000 );
-				if ( ++ $attempts > 10 ) {
+				if ( ++$attempts > 10 ) {
 					$this->fail( 'Server did not start' );
 				}
 			}

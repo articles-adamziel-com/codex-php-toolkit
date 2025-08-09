@@ -38,10 +38,10 @@ class StepTestCase extends TestCase {
 	 * @before
 	 */
 	public function setUp(): void {
-		if (PHP_OS_FAMILY === 'Linux' && file_exists('/etc/os-release') && strpos(file_get_contents('/etc/os-release'), 'Ubuntu') !== false) {
-			$this->markTestSkipped('Step tests are skipped on Ubuntu. @TODO: Re-enable them. Somehow the WordPress.zip request always times out.');
+		if ( PHP_OS_FAMILY === 'Linux' && file_exists( '/etc/os-release' ) && strpos( file_get_contents( '/etc/os-release' ), 'Ubuntu' ) !== false ) {
+			$this->markTestSkipped( 'Step tests are skipped on Ubuntu. @TODO: Re-enable them. Somehow the WordPress.zip request always times out.' );
 		}
-		$tmp_dir = wp_unix_sys_get_temp_dir();
+		$tmp_dir                      = wp_unix_sys_get_temp_dir();
 		$this->document_root          = wp_join_unix_paths( $tmp_dir, 'test_' . uniqid() );
 		$this->execution_context_path = wp_join_unix_paths( $tmp_dir, 'test_' . uniqid() );
 		$this->execution_context      = LocalFilesystem::create( $this->execution_context_path );
@@ -51,22 +51,20 @@ class StepTestCase extends TestCase {
 			LocalFilesystem::create( $tmp_dir )->copy(
 				'blueprint_test_base_site',
 				basename( $this->document_root ),
-				[ 'recursive' => true ]
+				array( 'recursive' => true )
 			);
 			$config = ( new RunnerConfiguration() )
 				->setExecutionMode( 'apply-to-existing-site' )
-				->setTargetSiteRoot( $this->document_root )
-			;
+				->setTargetSiteRoot( $this->document_root );
 		} else {
 			$config = ( new RunnerConfiguration() )
 				->setExecutionMode( 'create-new-site' )
-				->setTargetSiteRoot( $base_site_root )
-			;
+				->setTargetSiteRoot( $base_site_root );
 		}
 
 		file_put_contents(
 			wp_join_unix_paths( $this->execution_context_path, 'blueprint.json' ),
-			json_encode( [ "version" => 2 ] )
+			json_encode( array( 'version' => 2 ) )
 		);
 
 		$config
@@ -91,7 +89,7 @@ class StepTestCase extends TestCase {
 	 */
 	public function tearDown(): void {
 		// Don't clean up on Windows – it adds ~20s to each test in GitHub CI!
-		if (PHP_OS_FAMILY === 'Windows') {
+		if ( PHP_OS_FAMILY === 'Windows' ) {
 			return;
 		}
 		// Clean up temp directory
@@ -109,7 +107,7 @@ class StepTestCase extends TestCase {
 		}
 		$objects = scandir( $dir );
 		foreach ( $objects as $object ) {
-			if ( $object == "." || $object == ".." ) {
+			if ( $object == '.' || $object == '..' ) {
 				continue;
 			}
 

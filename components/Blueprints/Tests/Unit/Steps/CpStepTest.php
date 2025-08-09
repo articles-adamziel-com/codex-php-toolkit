@@ -44,7 +44,7 @@ class CpStepTest extends StepTestCase {
 	}
 
 	public function testCopyDirectoryWithNestedContent() {
-		$this->runtime->getTargetFilesystem()->mkdir( 'source_dir/nested_dir', [ 'recursive' => true ] );
+		$this->runtime->getTargetFilesystem()->mkdir( 'source_dir/nested_dir', array( 'recursive' => true ) );
 		$this->runtime->getTargetFilesystem()->put_contents( 'source_dir/file1.txt', 'test content 1' );
 		$this->runtime->getTargetFilesystem()->put_contents( 'source_dir/nested_dir/file2.txt', 'test content 2' );
 

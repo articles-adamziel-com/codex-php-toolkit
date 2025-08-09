@@ -30,7 +30,8 @@ PHP;
 
 	public function testInstallPluginWithActivation() {
 		$this->execution_context->mkdir(
-			'test-plugin', [ 'recursive' => true ]
+			'test-plugin',
+			array( 'recursive' => true )
 		);
 		$this->execution_context->put_contents(
 			'test-plugin/test-plugin.php',
@@ -38,9 +39,12 @@ PHP;
 		);
 
 		$step = new InstallPluginStep(
-			DataReference::create( './test-plugin/test-plugin.php', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./test-plugin/test-plugin.php',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			true
 		);
 
@@ -59,7 +63,6 @@ PHP;
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( json_encode(get_option('active_plugins')) );
 PHP
-
 		)->outputFileContent;
 
 		$active_plugins = json_decode( $active_plugins, true );
@@ -68,7 +71,8 @@ PHP
 
 	public function testInstallPluginWithoutActivation() {
 		$this->execution_context->mkdir(
-			'test-plugin', [ 'recursive' => true ]
+			'test-plugin',
+			array( 'recursive' => true )
 		);
 		$this->execution_context->put_contents(
 			'test-plugin/test-plugin.php',
@@ -76,9 +80,12 @@ PHP
 		);
 
 		$step = new InstallPluginStep(
-			DataReference::create( './test-plugin/test-plugin.php', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./test-plugin/test-plugin.php',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			false
 		);
 
@@ -102,7 +109,6 @@ $active_plugins = get_option('active_plugins');
 $inactive_plugins = array_diff(array_keys($all_plugins), $active_plugins);
 append_output( json_encode($inactive_plugins) );
 PHP
-
 		)->outputFileContent;
 		$inactive_plugins = json_decode( $inactive_plugins, true );
 		$this->assertContains( 'test-plugin/test-plugin.php', $inactive_plugins );
@@ -114,7 +120,6 @@ PHP
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( json_encode(get_option('active_plugins')) );
 PHP
-
 		)->outputFileContent;
 
 		$active_plugins = json_decode( $active_plugins, true );
@@ -130,9 +135,12 @@ PHP
 		}
 
 		$step = new InstallPluginStep(
-			DataReference::create( './zipped-test-plugin.zip', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./zipped-test-plugin.zip',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			true
 		);
 
@@ -151,7 +159,6 @@ PHP
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( json_encode(get_option('active_plugins')) );
 PHP
-
 		)->outputFileContent;
 
 		$active_plugins = json_decode( $active_plugins, true );
@@ -167,9 +174,12 @@ PHP
 		}
 
 		$step = new InstallPluginStep(
-			DataReference::create( './zipped-test-plugin.zip', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./zipped-test-plugin.zip',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			true
 		);
 
@@ -188,7 +198,6 @@ PHP
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( json_encode(get_option('active_plugins')) );
 PHP
-
 		)->outputFileContent;
 
 		$active_plugins = json_decode( $active_plugins, true );
@@ -197,7 +206,8 @@ PHP
 
 	public function testInstallPluginFromADirectory() {
 		$this->execution_context->mkdir(
-			'plugin-directory', [ 'recursive' => true ]
+			'plugin-directory',
+			array( 'recursive' => true )
 		);
 		$this->execution_context->put_contents(
 			'plugin-directory/test-plugin.php',
@@ -205,9 +215,12 @@ PHP
 		);
 
 		$step = new InstallPluginStep(
-			DataReference::create( './plugin-directory', [
-				ExecutionContextPath::class
-			] ),
+			DataReference::create(
+				'./plugin-directory',
+				array(
+					ExecutionContextPath::class,
+				)
+			),
 			true
 		);
 
@@ -225,12 +238,9 @@ PHP
 require_once getenv('DOCROOT') . '/wp-load.php';
 append_output( json_encode(get_option('active_plugins')) );
 PHP
-
 		)->outputFileContent;
 
 		$active_plugins = json_decode( $active_plugins, true );
 		$this->assertContains( 'plugin-directory/test-plugin.php', $active_plugins );
 	}
-
-
 }

@@ -28,23 +28,23 @@ class BlockMarkupUrlProcessorTest extends TestCase {
 				'https://wordpress.org',
 				'<a href="https://wordpress.org">',
 			),
-			'In the second block attribute, when it contains just the URL'                         => array(
+			'In the second block attribute, when it contains just the URL' => array(
 				'https://mysite.com/wp-content/image.png',
 				'<!-- wp:image {"class": "wp-bold", "src": "https://mysite.com/wp-content/image.png"} -->',
 			),
-			'In the first block attribute, when it contains just the URL'                          => array(
+			'In the first block attribute, when it contains just the URL' => array(
 				'https://mysite.com/wp-content/image.png',
 				'<!-- wp:image {"src": "https://mysite.com/wp-content/image.png"} -->',
 			),
-			'In a block attribute, in a nested object, when it contains just the URL'              => array(
+			'In a block attribute, in a nested object, when it contains just the URL' => array(
 				'https://mysite.com/wp-content/image.png',
 				'<!-- wp:image {"class": "wp-bold", "meta": { "src": "https://mysite.com/wp-content/image.png" } } -->',
 			),
-			'In a block attribute, in an array, when it contains just the URL'                     => array(
+			'In a block attribute, in an array, when it contains just the URL' => array(
 				'https://mysite.com/wp-content/image.png',
 				'<!-- wp:image {"class": "wp-bold", "srcs": [ "https://mysite.com/wp-content/image.png" ] } -->',
 			),
-			'In a text node, when it contains a well-formed absolute URL'                          => array(
+			'In a text node, when it contains a well-formed absolute URL' => array(
 				'https://wordpress.org',
 				'Have you seen https://wordpress.org? ',
 			),
@@ -52,15 +52,15 @@ class BlockMarkupUrlProcessorTest extends TestCase {
 				'wordpress.org',
 				'<p>Have you seen wordpress.org',
 			),
-			'In a text node, when it contains a protocol-relative absolute URL'                    => array(
+			'In a text node, when it contains a protocol-relative absolute URL' => array(
 				'//wordpress.org',
 				'Have you seen //wordpress.org? ',
 			),
-			'In a text node, when it contains a domain-only absolute URL'                          => array(
+			'In a text node, when it contains a domain-only absolute URL' => array(
 				'wordpress.org',
 				'Have you seen wordpress.org? ',
 			),
-			'In a text node, when it contains a domain-only absolute URL with path'                => array(
+			'In a text node, when it contains a domain-only absolute URL with path' => array(
 				'wordpress.org/plugins',
 				'Have you seen wordpress.org/plugins? ',
 			),
@@ -69,7 +69,7 @@ class BlockMarkupUrlProcessorTest extends TestCase {
 				'<a href=""></a>',
 				'https://wordpress.org',
 			),
-			'Skips over an empty string in <a href=""> when not given a base URL'                  => array(
+			'Skips over an empty string in <a href=""> when not given a base URL' => array(
 				'https://developer.w.org',
 				'<a href=""></a><a href="https://developer.w.org"></a>',
 				null,
@@ -123,8 +123,11 @@ class BlockMarkupUrlProcessorTest extends TestCase {
 		$this->assertEquals( 'https://first-url.org', $p->get_raw_url(), 'Found a URL in the markup, but it wasn\'t the expected one.' );
 
 		$this->assertTrue( $p->next_url(), 'Failed to find the URL in the markup.' );
-		$this->assertEquals( 'https://mysite.com/wp-content/image.png', $p->get_raw_url(),
-			'Found a URL in the markup, but it wasn\'t the expected one.' );
+		$this->assertEquals(
+			'https://mysite.com/wp-content/image.png',
+			$p->get_raw_url(),
+			'Found a URL in the markup, but it wasn\'t the expected one.'
+		);
 	}
 
 	public function test_next_url_finds_urls_in_multiple_tags() {
@@ -134,8 +137,11 @@ class BlockMarkupUrlProcessorTest extends TestCase {
 		$this->assertEquals( 'https://first-url.org', $p->get_raw_url(), 'Found a URL in the markup, but it wasn\'t the expected one.' );
 
 		$this->assertTrue( $p->next_url(), 'Failed to find the URL in the markup.' );
-		$this->assertEquals( 'https://mysite.com/wp-content/image.png', $p->get_raw_url(),
-			'Found a URL in the markup, but it wasn\'t the expected one.' );
+		$this->assertEquals(
+			'https://mysite.com/wp-content/image.png',
+			$p->get_raw_url(),
+			'Found a URL in the markup, but it wasn\'t the expected one.'
+		);
 
 		$this->assertTrue( $p->next_url(), 'Failed to find the URL in the markup.' );
 		$this->assertEquals( 'https://third-url.org', $p->get_raw_url(), 'Found a URL in the markup, but it wasn\'t the expected one.' );

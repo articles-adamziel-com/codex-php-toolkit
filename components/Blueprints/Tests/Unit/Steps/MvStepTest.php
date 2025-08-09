@@ -87,7 +87,7 @@ class MvStepTest extends StepTestCase {
 
 	public function testMoveDirectoryWithNestedContent() {
 		$fs = $this->runtime->getTargetFilesystem();
-		$fs->mkdir( 'source_dir/nested_dir', [ 'recursive' => true ] );
+		$fs->mkdir( 'source_dir/nested_dir', array( 'recursive' => true ) );
 		$fs->put_contents( 'source_dir/file1.txt', 'test content 1' );
 		$fs->put_contents( 'source_dir/nested_dir/file2.txt', 'test content 2' );
 

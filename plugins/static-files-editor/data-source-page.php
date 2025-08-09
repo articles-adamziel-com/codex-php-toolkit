@@ -31,17 +31,20 @@ function msf_render_data_source() {
 	$local_directory  = $config['localDirectory'] ?? WP_CONTENT_DIR . '/uploads/notes';
 	$github_token     = get_option( 'msf_github_token', '' );
 	$selected_repo    = $config['selectedRepo'] ?? '';
-	
+
 	if ( $git_repo ) {
 		$branches = WP_Static_Files_Editor_Plugin::get_git_branches(
-			WP_Static_Files_Editor_Plugin::get_git_remote_url( $git_repo, [
-				'provider' => $data_source_type === 'github_repository' ? 'github' : 'git',
-			] ),
-		)[ 'refs' ];
+			WP_Static_Files_Editor_Plugin::get_git_remote_url(
+				$git_repo,
+				array(
+					'provider' => $data_source_type === 'github_repository' ? 'github' : 'git',
+				)
+			),
+		)['refs'];
 	} else {
 		$branches = array();
 	}
-	
+
 	// Get GitHub repositories if we have a token
 	$github_repos = array();
 	if ( ! empty( $github_token ) ) {
@@ -50,7 +53,7 @@ function msf_render_data_source() {
 			$github_repos = array();
 		}
 	}
-	
+
 	$notices = array();
 	if ( isset( $_GET['error_code'] ) && $_GET['error_code'] === 'no_data_source' ) {
 		$notices[] = array(
@@ -318,9 +321,11 @@ add_action(
 		wp_enqueue_script( 'wp-components' );
 		wp_enqueue_script( 'wp-notices' );
 		wp_enqueue_style( 'dashicons' );
-		
+
 		// Add GitHub styles directly
-		wp_add_inline_style( 'wp-admin', '
+		wp_add_inline_style(
+			'wp-admin',
+			'
 			.hidden {
 				display: none !important;
 			}
@@ -404,8 +409,9 @@ add_action(
 				color: #0056b3;
 				text-decoration: underline;
 			}
-		');
-		
+		'
+		);
+
 		wp_enqueue_script_module(
 			'@static-files-editor/data-source-page',
 			plugin_dir_url( __FILE__ ) . 'data-source-page.js',

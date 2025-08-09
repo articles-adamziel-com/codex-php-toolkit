@@ -86,7 +86,7 @@ class ProxyFunctionsTests extends TestCase {
 				),
 				'http://example.com',
 			),
-			'Request with server-provided single-slash PATH_INFO'           => array(
+			'Request with server-provided single-slash PATH_INFO' => array(
 				array(
 					'PATH_INFO' => '/',
 				),
@@ -98,7 +98,7 @@ class ProxyFunctionsTests extends TestCase {
 				),
 				false,
 			),
-			'Request with server-provided PATH_INFO and QUERY_STRING'       => array(
+			'Request with server-provided PATH_INFO and QUERY_STRING' => array(
 				array(
 					'PATH_INFO'    => '/http://example.com/from-path-info',
 					'QUERY_STRING' => 'http://example.com/from-query-string',
@@ -118,7 +118,7 @@ class ProxyFunctionsTests extends TestCase {
 				),
 				'http://example.com/from-query-string',
 			),
-			'Request with neither PATH_INFO nor QUERY_STRING'               => array(
+			'Request with neither PATH_INFO nor QUERY_STRING' => array(
 				array(),
 				false,
 			),
@@ -126,8 +126,10 @@ class ProxyFunctionsTests extends TestCase {
 	}
 
 	public function testGetCurrentScriptUri() {
-		$this->assertEquals( 'http://localhost/cors-proxy/',
-			get_current_script_uri( 'http://example.com', 'http://localhost/cors-proxy/http://example.com' ) );
+		$this->assertEquals(
+			'http://localhost/cors-proxy/',
+			get_current_script_uri( 'http://example.com', 'http://localhost/cors-proxy/http://example.com' )
+		);
 	}
 
 	public function testUrlValidateAndResolve() {

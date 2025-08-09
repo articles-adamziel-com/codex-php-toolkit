@@ -92,24 +92,23 @@ class XMLAttributeToken {
 	/**
 	 * Constructor.
 	 *
-	 * @param  string  $name  Attribute name.
-	 * @param  int  $value_start  Attribute value.
-	 * @param  int  $value_length  Number of bytes attribute value spans.
-	 * @param  int  $start  The string offset where the attribute name starts.
-	 * @param  int  $length  Byte length of the entire attribute name or name and value pair expression.
-	 * @param  string  $namespace_prefix  Namespace prefix.
-	 * @param  string  $local_name  Local name.
-	 * @param  string  $namespace  Namespace.
-	 *
+	 * @param  string $name  Attribute name.
+	 * @param  int    $value_start  Attribute value.
+	 * @param  int    $value_length  Number of bytes attribute value spans.
+	 * @param  int    $start  The string offset where the attribute name starts.
+	 * @param  int    $length  Byte length of the entire attribute name or name and value pair expression.
+	 * @param  string $namespace_prefix  Namespace prefix.
+	 * @param  string $local_name  Local name.
+	 * @param  string $namespace  Namespace.
 	 */
-	public function __construct( $value_start, $value_length, $start, $length, $namespace_prefix=null, $local_name=null, $namespace=null ) {
-		$this->value_starts_at = $value_start;
-		$this->value_length    = $value_length;
-		$this->start           = $start;
-		$this->length          = $length;
+	public function __construct( $value_start, $value_length, $start, $length, $namespace_prefix = null, $local_name = null, $namespace = null ) {
+		$this->value_starts_at  = $value_start;
+		$this->value_length     = $value_length;
+		$this->start            = $start;
+		$this->length           = $length;
 		$this->namespace_prefix = $namespace_prefix;
-		$this->local_name      = $local_name;
-		$this->namespace       = $namespace;
-		$this->qualified_name  = $namespace_prefix ? $namespace_prefix . ':' . $local_name : $local_name;
+		$this->local_name       = $local_name;
+		$this->namespace        = $namespace;
+		$this->qualified_name   = $namespace_prefix ? $namespace_prefix . ':' . $local_name : $local_name;
 	}
 }

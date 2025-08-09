@@ -1,15 +1,15 @@
 :global(#wpadminbar) {
-    display: none;
+	display: none;
 }
 :global(.interface-interface-skeleton) {
-    top: 0;
+	top: 0;
 }
 :global(.editor-visual-editor.has-padding) {
-    padding: 0;
+	padding: 0;
 }
 :global(.components-editor-notices__snackbar) {
-    /* Accommodate the mobile menu at the bottom of the screen */
-    bottom: 104px !important;
+	/* Accommodate the mobile menu at the bottom of the screen */
+	bottom: 104px !important;
 }
 
 /**
@@ -23,7 +23,7 @@
 :global(.editor-list-view-sidebar .block-editor-tabbed-sidebar__tablist-and-close-button),
 /** Hide the "Welcome to the block editor" modal */
 :global(.components-modal__screen-overlay:has(.components-modal__screen-overlay)) {
-    display: none !important;
+	display: none !important;
 }
 
 /**
@@ -31,7 +31,7 @@
  * that says "The backup of this post in your browser is not available."
  */
 :global(.components-notice.is-warning.is-dismissible) {
-    display: none !important;
+	display: none !important;
 }
 
 /**
@@ -57,12 +57,12 @@
 		display: none !important;
 	}
 
-    /**
-     * Smaller gap between the post title and the top of the screen.
-     */
-    :global(.editor-visual-editor__post-title-wrapper) {
-        margin-top: 2rem !important;
-    }
+	/**
+	 * Smaller gap between the post title and the top of the screen.
+	 */
+	:global(.editor-visual-editor__post-title-wrapper) {
+		margin-top: 2rem !important;
+	}
 
 	/**
 	 * Stick the block toolbar to the virtual keyboard.
@@ -81,10 +81,10 @@
 
 .inside-editor-toolbar {
 	width: 100%;
-    display: flex;
+	display: flex;
 	flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+	justify-content: space-between;
+	align-items: center;
 	box-sizing: border-box;
 	padding: 10px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.133) !important;
@@ -110,16 +110,16 @@
 }
 
 @keyframes fadeInOut {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.2;
-    }
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.2;
+	}
 }
 
 .icon-fade {
-    animation: fadeInOut 2s infinite;
+	animation: fadeInOut 2s infinite;
 }
 
 .sync-button {

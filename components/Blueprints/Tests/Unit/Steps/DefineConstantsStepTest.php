@@ -11,10 +11,10 @@ class DefineConstantsStepTest extends StepTestCase {
 	 * Test updating existing constants
 	 */
 	public function testUpdateExistingConstants() {
-		$constants = [
+		$constants = array(
 			'WP_DEBUG' => true,
 			'DB_NAME'  => 'updated_db',
-		];
+		);
 		$step      = new DefineConstantsStep( $constants );
 		$step->run( $this->runtime, new Tracker() );
 		$this->assertWordPressConstants( $constants );
@@ -24,10 +24,10 @@ class DefineConstantsStepTest extends StepTestCase {
 	 * Test adding new constants
 	 */
 	public function testAddNewConstants() {
-		$constants = [
+		$constants = array(
 			'WP_MEMORY_LIMIT'            => '256M',
 			'AUTOMATIC_UPDATER_DISABLED' => true,
-		];
+		);
 		$step      = new DefineConstantsStep( $constants );
 		$step->run( $this->runtime, new Tracker() );
 		$this->assertWordPressConstants( $constants );
@@ -35,10 +35,10 @@ class DefineConstantsStepTest extends StepTestCase {
 
 	public function testAddNewConstantsToEmptyWpConfig() {
 		$this->runtime->getTargetFilesystem()->put_contents( 'wp-config.php', "<?php\n" );
-		$constants = [
+		$constants = array(
 			'WP_MEMORY_LIMIT'            => '256M',
 			'AUTOMATIC_UPDATER_DISABLED' => true,
-		];
+		);
 		$step      = new DefineConstantsStep( $constants );
 		$step->run( $this->runtime, new Tracker() );
 		$this->assertWordPressConstants( $constants );
@@ -66,10 +66,10 @@ define( 'WP_DEBUG', true );
 require_once ABSPATH . 'wp-settings.php';
 PHP
 		);
-		$constants = [
+		$constants = array(
 			'WP_MEMORY_LIMIT'            => '256M',
 			'AUTOMATIC_UPDATER_DISABLED' => true,
-		];
+		);
 		$step      = new DefineConstantsStep( $constants );
 		$step->run( $this->runtime, new Tracker() );
 		$this->assertWordPressConstants( $constants );
@@ -108,10 +108,10 @@ define( 'WP_DEBUG', true );
 require_once ABSPATH . 'wp-settings.php';
 PHP
 		);
-		$constants = [
+		$constants = array(
 			'WP_MEMORY_LIMIT'            => '256M',
 			'AUTOMATIC_UPDATER_DISABLED' => true,
-		];
+		);
 		$step      = new DefineConstantsStep( $constants );
 		$step->run( $this->runtime, new Tracker() );
 		$this->assertWordPressConstants( $constants );
@@ -145,10 +145,10 @@ define( 'WP_DEBUG', true );
 require_once ABSPATH . 'wp-settings.php';
 PHP
 		);
-		$constants = [
+		$constants = array(
 			'WP_MEMORY_LIMIT'            => '256M',
 			'AUTOMATIC_UPDATER_DISABLED' => true,
-		];
+		);
 		$step      = new DefineConstantsStep( $constants );
 		$step->run( $this->runtime, new Tracker() );
 		$this->assertWordPressConstants( $constants );
@@ -171,10 +171,10 @@ PHP
 
 	public function testAddNewConstantsToInvalidWpConfig() {
 		$this->runtime->getTargetFilesystem()->put_contents( 'wp-config.php', '' );
-		$constants = [
+		$constants = array(
 			'WP_MEMORY_LIMIT'            => '256M',
 			'AUTOMATIC_UPDATER_DISABLED' => true,
-		];
+		);
 
 		$this->expectException( Exception::class );
 		$this->expectExceptionMessage( 'Blueprint Error: wp-config.php file is not a valid PHP file.' );
@@ -187,14 +187,14 @@ PHP
 	 * Test defining constants with different data types
 	 */
 	public function testDefineConstantsWithDifferentTypes() {
-		$constants = [
+		$constants = array(
 			'STRING_CONST' => 'string value',
 			'BOOL_CONST'   => true,
 			'INT_CONST'    => 42,
 			'FLOAT_CONST'  => 3.14,
-			'ARRAY_CONST'  => [ 'one', 'two', 'three' ],
+			'ARRAY_CONST'  => array( 'one', 'two', 'three' ),
 			'NULL_CONST'   => null,
-		];
+		);
 		$step      = new DefineConstantsStep( $constants );
 		$step->run( $this->runtime, new Tracker() );
 		$this->assertWordPressConstants( $constants );
@@ -205,7 +205,7 @@ PHP
 	 */
 	public function testErrorHandlingWhenWpConfigNotExists() {
 		$this->runtime->getTargetFilesystem()->rm( 'wp-config.php' );
-		$step = new DefineConstantsStep( [ 'WP_DEBUG' => true ] );
+		$step = new DefineConstantsStep( array( 'WP_DEBUG' => true ) );
 		$this->expectException( Exception::class );
 		$step->run( $this->runtime, new Tracker() );
 	}
@@ -214,7 +214,7 @@ PHP
 	 * Test defining multiple constants at once
 	 */
 	public function testDefineMultipleConstants() {
-		$constants = [
+		$constants = array(
 			'WP_DEBUG'            => true,
 			'WP_DEBUG_LOG'        => true,
 			'WP_DEBUG_DISPLAY'    => false,
@@ -225,7 +225,7 @@ PHP
 			'COMPRESS_SCRIPTS'    => false,
 			'COMPRESS_CSS'        => false,
 			'ENFORCE_GZIP'        => false,
-		];
+		);
 		$step      = new DefineConstantsStep( $constants );
 		$step->run( $this->runtime, new Tracker() );
 		$this->assertWordPressConstants( $constants );
@@ -234,7 +234,7 @@ PHP
 	/**
 	 * Helper method to verify constants are defined in WordPress
 	 *
-	 * @param  array  $constants  Array of constants to check
+	 * @param  array $constants  Array of constants to check
 	 *
 	 * @return array Results of constant verification
 	 */
@@ -256,13 +256,12 @@ foreach ($constants as $name => $expected_value) {
 append_output( json_encode($results) );
 PHP
 			,
-			[
+			array(
 				'CONSTANTS' => json_encode( $expected_constants ),
-			]
+			)
 		)->outputFileContent;
 
 		$actual_constants = json_decode( $result, true );
 		$this->assertEquals( $expected_constants, $actual_constants );
 	}
-
 }

@@ -142,7 +142,7 @@ class BlockMarkupProcessorTest extends TestCase {
 	 */
 	public function test_set_modifiable_text( $markup, $new_text, $new_markup, $which_token = 1 ) {
 		$p = new BlockMarkupProcessor( $markup );
-		for ( $i = 0; $i < $which_token; $i ++ ) {
+		for ( $i = 0; $i < $which_token; $i++ ) {
 			$p->next_token();
 		}
 		$this->assertTrue( $p->set_modifiable_text( $new_text ), 'Failed to set the modifiable text.' );
