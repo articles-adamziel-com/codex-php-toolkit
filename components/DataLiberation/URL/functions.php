@@ -2,33 +2,33 @@
 
 namespace WordPress\DataLiberation\URL;
 
-use Rowbot\URL\URL;
 use WordPress\DataLiberation\BlockMarkup\BlockMarkupUrlProcessor;
 
 
-/**
- * Migrate URLs in post content. See WPRewriteUrlsTests for
- * specific examples. TODO: A better description.
- *
- * Example:
- *
- * ```php
- * php > wp_rewrite_urls([
- *   'block_markup' => '<!-- wp:image {"src": "http://legacy-blog.com/image.jpg"} -->',
- *   'url-mapping' => [
- *     'http://legacy-blog.com' => 'https://modern-webstore.org'
- *   ]
- * ])
- * <!-- wp:image {"src":"https:\/\/modern-webstore.org\/image.jpg"} -->
- * ```
- *
- * @TODO Use a proper JSON parser and encoder to:
- * * Support UTF-16 characters
- * * Gracefully handle recoverable encoding issues
- * * Avoid changing the whitespace in the same manner as
- *   we do in WP_HTML_Tag_Processor
- */
-function wp_rewrite_urls( $options ) {
+if ( ! function_exists( __NAMESPACE__ . '\\wp_rewrite_urls' ) ) {
+       /**
+        * Migrate URLs in post content. See WPRewriteUrlsTests for
+        * specific examples. TODO: A better description.
+        *
+        * Example:
+        *
+        * ```php
+        * php > wp_rewrite_urls([
+        *   'block_markup' => '<!-- wp:image {"src": "http://legacy-blog.com/image.jpg"} -->',
+        *   'url-mapping' => [
+        *     'http://legacy-blog.com' => 'https://modern-webstore.org'
+        *   ]
+        * ])
+        * <!-- wp:image {"src":"https:\/\/modern-webstore.org\/image.jpg"} -->
+        * ```
+        *
+        * @TODO Use a proper JSON parser and encoder to:
+        * * Support UTF-16 characters
+        * * Gracefully handle recoverable encoding issues
+        * * Avoid changing the whitespace in the same manner as
+        *   we do in WP_HTML_Tag_Processor
+        */
+       function wp_rewrite_urls( $options ) {
 	if ( empty( $options['base_url'] ) ) {
 		// Use first from-url as base_url if not specified
 		$from_urls           = array_keys( $options['url-mapping'] );
@@ -55,17 +55,19 @@ function wp_rewrite_urls( $options ) {
 	}
 
 	return $p->get_updated_html();
+       }
 }
 
-/**
- * Check if a given URL matches the current site URL.
- *
- * @param  URL  $parent  The URL to check.
- * @param  string  $child  The current site URL to compare against.
- *
- * @return bool Whether the URL matches the current site URL.
- */
-function is_child_url_of( $child, $parent_url ) {
+if ( ! function_exists( __NAMESPACE__ . '\\is_child_url_of' ) ) {
+       /**
+        * Check if a given URL matches the current site URL.
+        *
+        * @param  URL  $parent  The URL to check.
+        * @param  string  $child  The current site URL to compare against.
+        *
+        * @return bool Whether the URL matches the current site URL.
+        */
+       function is_child_url_of( $child, $parent_url ) {
 	$parent_url                       = is_string( $parent_url ) ? WPURL::parse( $parent_url ) : $parent_url;
 	$child                            = is_string( $child ) ? WPURL::parse( $child ) : $child;
 	$child_pathname_no_trailing_slash = rtrim( urldecode( $child->pathname ), '/' );
@@ -91,20 +93,22 @@ function is_child_url_of( $child, $parent_url ) {
 		// Path prefix
 		strncmp( $child_pathname_no_trailing_slash . '/', $parent_pathname, strlen( $parent_pathname ) ) === 0
 	);
+       }
 }
 
-/**
- * Decodes the first n **encoded bytes** a URL-encoded string.
- *
- * For example, `urldecode_n( '%22is 6 %3C 6?%22 – asked Achilles', 1 )` returns
- * '"is 6 %3C 6?%22 – asked Achilles' because only the first encoded byte is decoded.
- *
- * @param  string  $string  The string to decode.
- * @param  int  $decode_n  The number of bytes to decode in $input
- *
- * @return string The decoded string.
- */
-function urldecode_n( $input, $decode_n ) {
+if ( ! function_exists( __NAMESPACE__ . '\\urldecode_n' ) ) {
+       /**
+        * Decodes the first n **encoded bytes** a URL-encoded string.
+        *
+        * For example, `urldecode_n( '%22is 6 %3C 6?%22 – asked Achilles', 1 )` returns
+        * '"is 6 %3C 6?%22 – asked Achilles' because only the first encoded byte is decoded.
+        *
+        * @param  string  $string  The string to decode.
+        * @param  int  $decode_n  The number of bytes to decode in $input
+        *
+        * @return string The decoded string.
+        */
+       function urldecode_n( $input, $decode_n ) {
 	$result = '';
 	$at     = 0;
 	while ( true ) {
@@ -146,4 +150,5 @@ function urldecode_n( $input, $decode_n ) {
 	$result .= substr( $input, $at );
 
 	return $result;
+       }
 }
