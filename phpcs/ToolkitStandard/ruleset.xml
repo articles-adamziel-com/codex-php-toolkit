@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="ToolkitStandard">
+    <description>Project-specific autofixers for common issues.</description>
+
+    <rule ref="ToolkitStandard.Commenting.InlineCommentPunctuation"/>
+    <rule ref="ToolkitStandard.PHP.StrictInArray"/>
+    <rule ref="ToolkitStandard.DateTime.UseGmdate"/>
+    <rule ref="ToolkitStandard.Commenting.FunctionThrowsTag"/>
+    <rule ref="ToolkitStandard.Commenting.FilePackageTag">
+        <properties>
+            <property name="packageName" value="wordpress/php-toolkit"/>
+        </properties>
+    </rule>
+</ruleset>

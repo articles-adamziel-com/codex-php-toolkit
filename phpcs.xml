@@ -1,6 +1,7 @@
 <ruleset name="WordPressStandard">
     <description>PHP 7.2 compatibility.</description>
     <config name="testVersion" value="7.2-"/>
+    <config name="installed_paths" value="./phpcs"/>
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>vendor-patched/*</exclude-pattern>
     <rule ref="PHPCompatibilityWP"/>
@@ -39,4 +40,7 @@
         <!-- "Parameter comment must end with a full stop" is such a pebble in the shoe. -->
         <exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
     </rule>
+
+    <!-- Include project-specific autofixers -->
+    <rule ref="./phpcs/ToolkitStandard/ruleset.xml"/>
 </ruleset>
