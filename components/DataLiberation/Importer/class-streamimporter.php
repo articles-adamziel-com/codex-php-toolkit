@@ -594,21 +594,20 @@ class StreamImporter {
 	 * downloader will enqueue B for download and will skip C and D since
 	 * the relevant files already exist in the filesystem.
 	 */
-	protected function frontloading_advance_reentrancy_cursor() {
-		while ( $this->downloader->next_event() ) {
-			$event = $this->downloader->get_event();
-			switch ( $event->type ) {
-				case AttachmentDownloaderEvent::FAILURE:
-				case AttachmentDownloaderEvent::SUCCESS:
-				case AttachmentDownloaderEvent::IN_PROGRESS:
-				case AttachmentDownloaderEvent::ALREADY_EXISTS:
-					$this->frontloading_events[] = $event;
-					foreach ( array_keys( $this->active_downloads ) as $entity_cursor ) {
-						unset( $this->active_downloads[ $entity_cursor ][ $event->resource_id ] );
-					}
-					break;
-			}
-		}
+        protected function frontloading_advance_reentrancy_cursor() {
+                foreach ( $this->downloader->get_events() as $event ) {
+                        switch ( $event->type ) {
+                                case AttachmentDownloaderEvent::FAILURE:
+                                case AttachmentDownloaderEvent::SUCCESS:
+                                case AttachmentDownloaderEvent::IN_PROGRESS:
+                                case AttachmentDownloaderEvent::ALREADY_EXISTS:
+                                        $this->frontloading_events[] = $event;
+                                        foreach ( array_keys( $this->active_downloads ) as $entity_cursor ) {
+                                                unset( $this->active_downloads[ $entity_cursor ][ $event->resource_id ] );
+                                        }
+                                        break;
+                        }
+                }
 
 		while ( count( $this->active_downloads ) > 0 ) {
 			$oldest_download_cursor = key( $this->active_downloads );
